@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">God Of Burguer</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="insumos">Insumos</string>
+    <string name="lanches">Lanches</string>
+    <string name="fornecedores">Fornecedores</string>
+    <string name="clientes">Clientes</string>
+
+</resources>
