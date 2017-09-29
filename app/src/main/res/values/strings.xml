@@ -10,5 +10,11 @@
     <string name="lanches">Lanches</string>
     <string name="fornecedores">Fornecedores</string>
     <string name="clientes">Clientes</string>
-
+    <string name="indicadores">Indicadores</string>
+    <string name="satisfacao">Satisfação</string>
+    <string name="atendimento_cliente">Atendimento ao Cliente</string>
+    <string name="qualidade">Qualidade</string>
+    <string name="qualidade_lanche">Qualidade do lanche servido</string>
+    <string name="agilidade">Agilidade</string>
+    <string name="tempo_entrega">Tempo de entrega dos pedidos</string>
 </resources>
