@@ -17,4 +17,9 @@
     <string name="qualidade_lanche">Qualidade do lanche servido</string>
     <string name="agilidade">Agilidade</string>
     <string name="tempo_entrega">Tempo de entrega dos pedidos</string>
+    <string name="hint_login">Login</string>
+    <string name="hint_senha">Senha</string>
+    <string name="btn_entrar">Entrar</string>
+    <string name="btn_sair">Sair</string>
+
 </resources>
