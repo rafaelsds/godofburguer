@@ -34,7 +34,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/indicadores"
                     android:textColor="@color/black"
-                    android:textSize="20dp"/>
+                    android:textSize="15dp"/>
 
                 <TextView
                     android:gravity="center"
@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/satisfacao"
                     android:textColor="@color/black"
-                    android:textSize="40dp"/>
+                    android:textSize="25dp"/>
 
                 <TextView
                     android:gravity="center"
@@ -51,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/atendimento_cliente"
                     android:textColor="@color/black"
-                    android:textSize="20dp"/>
+                    android:textSize="18dp"/>
 
                 <LinearLayout
                     android:layout_marginTop="10dp"
@@ -64,13 +64,15 @@
                         android:layout_margin="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/icon_star"/>
+                        android:background="@drawable/icon_star"
+                        android:backgroundTint="@color/red"/>
 
                     <ImageButton
                         android:layout_margin="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/icon_star"/>
+                        android:background="@drawable/icon_star"
+                        android:backgroundTint="@color/red"/>
 
                     <ImageButton
                         android:layout_margin="10dp"
@@ -115,7 +117,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/indicadores"
                     android:textColor="@color/black"
-                    android:textSize="20dp"/>
+                    android:textSize="15dp"/>
 
                 <TextView
                     android:gravity="center"
@@ -124,7 +126,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/qualidade"
                     android:textColor="@color/black"
-                    android:textSize="40dp"/>
+                    android:textSize="25dp"/>
 
                 <TextView
                     android:gravity="center"
@@ -132,7 +134,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/qualidade_lanche"
                     android:textColor="@color/black"
-                    android:textSize="20dp"/>
+                    android:textSize="18dp"/>
 
                 <LinearLayout
                     android:layout_marginTop="10dp"
@@ -196,7 +198,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/indicadores"
                         android:textColor="@color/black"
-                        android:textSize="20dp"/>
+                        android:textSize="15dp"/>
 
                     <TextView
                         android:gravity="center"
@@ -205,7 +207,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/agilidade"
                         android:textColor="@color/black"
-                        android:textSize="40dp"/>
+                        android:textSize="25dp"/>
 
                     <TextView
                         android:gravity="center"
@@ -213,7 +215,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/tempo_entrega"
                         android:textColor="@color/black"
-                        android:textSize="20dp"/>
+                        android:textSize="18dp"/>
 
                     <LinearLayout
                         android:layout_marginTop="10dp"
