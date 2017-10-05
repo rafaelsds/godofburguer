@@ -20,14 +20,14 @@
             android:id="@+id/editUser"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_login"
+            android:hint="@string/login"
             android:inputType="textEmailAddress"/>
 
         <EditText
             android:id="@+id/editSenha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_senha"
+            android:hint="@string/senha"
             android:layout_marginTop="15dp"
             android:inputType="textPassword"/>
 
@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:textColor="@color/white"
-            android:text="@string/btn_entrar"
+            android:text="@string/entrar"
             android:layout_marginTop="30dp"
             android:background="@color/btn_color"/>
 
@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:textColor="@color/white"
-            android:text="@string/btn_sair"
+            android:text="@string/sair"
             android:layout_marginTop="5dp"
             android:background="@color/btn_color"/>
     </LinearLayout>
