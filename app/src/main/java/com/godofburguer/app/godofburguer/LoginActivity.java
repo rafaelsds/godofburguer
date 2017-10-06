@@ -65,8 +65,4 @@ public class LoginActivity extends Activity {
 
         return isValid;
     }
-
-    public void sair(View view) {
-
-    }
 }

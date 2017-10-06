@@ -9,7 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true">
 
         <ImageView
             android:layout_width="match_parent"
@@ -23,7 +25,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/login"
-            android:inputType="textEmailAddress"/>
+            android:inputType="textEmailAddress"
+            />
 
         <EditText
             android:id="@+id/editSenha"
@@ -36,10 +39,10 @@
         <Button
             android:id="@+id/btnEntrar"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:textColor="@color/white"
             android:text="@string/entrar"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="35dp"
             android:background="@color/btn_color"/>
 
         <Button
@@ -48,7 +51,7 @@
             android:layout_height="35dp"
             android:textColor="@color/white"
             android:text="@string/sair"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:background="@color/btn_color"/>
     </LinearLayout>
 
