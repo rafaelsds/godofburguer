@@ -17,4 +17,26 @@
     <string name="qualidade_lanche">Qualidade do lanche servido</string>
     <string name="agilidade">Agilidade</string>
     <string name="tempo_entrega">Tempo de entrega dos pedidos</string>
+    <string name="login">Login</string>
+    <string name="senha">Senha</string>
+    <string name="entrar">Entrar</string>
+    <string name="sair">Sair</string>
+    <string name="nome">Nome</string>
+    <string name="informe_nome">Informe o nome</string>
+    <string name="gravar">Gravar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="informe_o_endereco">Informe o endereço</string>
+    <string name="endereco">Endereço</string>
+    <string name="informe_o_email">Informe o email</string>
+    <string name="email">Email</string>
+    <string name="informe_o_telefone">Informe o telefone</string>
+    <string name="telefone">"Telefone"</string>
+    <string name="validate_senha">Informe a senha</string>
+    <string name="validate_user">Informe o usuário</string>
+    <string name="informe_endereco">Informe o endereço</string>
+    <string name="informe_telefone">Informe o telefone</string>
+    <string name="informe_email">Informe o email</string>
+    <string name="valor">Valor</string>
+    <string name="informe_valor">Informe o valor</string>
+
 </resources>
