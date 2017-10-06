@@ -31,4 +31,6 @@
     <string name="email">Email</string>
     <string name="informe_o_telefone">Informe o telefone</string>
     <string name="telefone">"Telefone"</string>
+    <string name="validate_senha">Informe a senha</string>
+    <string name="validate_user">Informe o usuário</string>
 </resources>
