@@ -22,6 +22,7 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.login);
 
         btnEntrar = (Button) findViewById(R.id.btnEntrar);
+        btnSair = (Button) findViewById(R.id.btnSair);
 
         btnEntrar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -34,15 +35,35 @@ public class LoginActivity extends Activity {
 
                     Intent i = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(i);
+                    finish();
                 }
 
 
             }
         });
+
+        btnSair.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     public boolean validaLogin(String login, String senha) {
-        return true;
+        Boolean isValid = true;
+
+        if(login.isEmpty()) {
+            loginEdit.setError(getString(R.string.validate_user));
+            isValid = false;
+        }
+
+        if(senha.isEmpty()) {
+            senhaEdit.setError(getString(R.string.validate_senha));
+            isValid = false;
+        }
+
+        return isValid;
     }
 
     public void sair(View view) {

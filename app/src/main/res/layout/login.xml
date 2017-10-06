@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/senha"
             android:layout_marginTop="15dp"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword" />
 
         <Button
             android:id="@+id/btnEntrar"

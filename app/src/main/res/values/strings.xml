@@ -25,4 +25,6 @@
     <string name="informe_nome">Informe o nome</string>
     <string name="gravar">Gravar</string>
     <string name="cancelar">Cancelar</string>
+    <string name="validate_senha">Informe a senha</string>
+    <string name="validate_user">Informe o usuário</string>
 </resources>
