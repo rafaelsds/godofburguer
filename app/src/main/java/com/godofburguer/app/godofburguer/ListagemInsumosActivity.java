@@ -1,51 +1,40 @@
 package com.godofburguer.app.godofburguer;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import com.godofburguer.app.godofburguer.entidades.Insumos;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by gustavo on 05/10/17.
+ * Rafael Silva
  */
 
 public class ListagemInsumosActivity extends Activity {
-    private Button btnEntrar;
-    private Button btnSair;
-    private EditText loginEdit;
-    private EditText senhaEdit;
+
+    private ListView listViewInsumos;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
+        setContentView(R.layout.activity_listagem_insumos);
 
-        btnEntrar = (Button) findViewById(R.id.btnEntrar);
+        listViewInsumos = (ListView)findViewById(R.id.listaInsumos);
 
-        btnEntrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loginEdit = (EditText) findViewById(R.id.editUser);
-                senhaEdit = (EditText) findViewById(R.id.editSenha);
+        List<Insumos>list = new ArrayList<Insumos>();
 
-                if (validaLogin(loginEdit.getText().toString(),
-                        senhaEdit.getText().toString())){
+        list.add(new Insumos("Bacon em tiras"));
+        list.add(new Insumos("Bacon em cubos"));
+        list.add(new Insumos("Pão com gergelim"));
+        list.add(new Insumos("Pão hamburguer"));
 
-                    Intent i = new Intent(ListagemInsumosActivity.this, MainActivity.class);
-                    startActivity(i);
-                }
-
-
-            }
-        });
-    }
-
-    public boolean validaLogin(String login, String senha) {
-        return true;
-    }
-
-    public void sair(View view) {
+        ArrayAdapter<Insumos> arrayAdapter = new ArrayAdapter<Insumos>(this, android.R.layout.simple_list_item_1, list);
+        listViewInsumos.setAdapter(arrayAdapter);
 
     }
+
+
 }

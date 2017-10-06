@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--Rafael Silva-->
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -7,7 +6,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ScrollView
+    <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -15,24 +14,16 @@
         android:layout_height="match_parent"
         android:padding="20dp">
 
-        <LinearLayout
+        <ListView
+            android:id="@+id/listaInsumos"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
+        </ListView>
 
-            <ListView
-                android:id="@+id/listaInsumos"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
-            </ListView>
-
-        </LinearLayout>
-    </ScrollView>
-
+    </LinearLayout>
+     
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/bttAddItem"
+        android:id="@+id/bttAddInsumo"
         android:backgroundTint="@color/colorPrimaryDark"
         android:src="@drawable/icon_more"
         android:layout_width="wrap_content"

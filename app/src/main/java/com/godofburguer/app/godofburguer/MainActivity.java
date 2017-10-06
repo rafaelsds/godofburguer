@@ -1,5 +1,6 @@
 package com.godofburguer.app.godofburguer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -95,7 +96,8 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_lanches) {
             // Handle the camera action
         } else if (id == R.id.nav_insumos) {
-
+            Intent it = new Intent(MainActivity.this, ListagemInsumosActivity.class);
+            startActivity(it);
         } else if (id == R.id.nav_fornecedores) {
 
         } else if (id == R.id.nav_clientes) {
