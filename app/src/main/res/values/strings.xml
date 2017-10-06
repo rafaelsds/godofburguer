@@ -33,4 +33,10 @@
     <string name="telefone">"Telefone"</string>
     <string name="validate_senha">Informe a senha</string>
     <string name="validate_user">Informe o usuário</string>
+    <string name="informe_endereco">Informe o endereço</string>
+    <string name="informe_telefone">Informe o telefone</string>
+    <string name="informe_email">Informe o email</string>
+    <string name="valor">Valor</string>
+    <string name="informe_valor">Informe o valor</string>
+
 </resources>
