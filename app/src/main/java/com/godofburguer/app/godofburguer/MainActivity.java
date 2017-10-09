@@ -99,7 +99,8 @@ public class MainActivity extends AppCompatActivity
             Intent it = new Intent(MainActivity.this, ListagemInsumosActivity.class);
             startActivity(it);
         } else if (id == R.id.nav_fornecedores) {
-
+            Intent it = new Intent(MainActivity.this, ListagemFornecedoresActivity.class);
+            startActivity(it);
         } else if (id == R.id.nav_clientes) {
 
         }
