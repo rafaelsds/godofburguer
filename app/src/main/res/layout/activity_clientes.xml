@@ -76,19 +76,15 @@
                 android:id="@+id/btnGravar"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/gravar"
-                android:background="@color/btn_color"
-                android:layout_marginRight="2dp"/>
+                android:layout_weight="0.5"
+                android:text="@string/gravar" />
 
             <Button
                 android:id="@+id/btnCancelar"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/cancelar"
-                android:background="@color/btn_color"
-                android:layout_marginLeft="2dp"/>
+                android:layout_weight="0.5"
+                android:text="@string/cancelar" />
 
         </LinearLayout>
 

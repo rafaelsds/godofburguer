@@ -102,7 +102,8 @@ public class MainActivity extends AppCompatActivity
             Intent it = new Intent(MainActivity.this, ListagemFornecedoresActivity.class);
             startActivity(it);
         } else if (id == R.id.nav_clientes) {
-
+            Intent it = new Intent(MainActivity.this, ListagemClientesActivity.class);
+            startActivity(it);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
