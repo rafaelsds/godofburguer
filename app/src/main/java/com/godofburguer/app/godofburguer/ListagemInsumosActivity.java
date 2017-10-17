@@ -53,7 +53,7 @@ public class ListagemInsumosActivity extends Activity {
         bttAddInsumo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(ListagemInsumosActivity.this, InsumosActivity.class);
+                Intent it = new Intent(ListagemInsumosActivity.this, Insumos.class);
                 startActivity(it);
             }
         });
