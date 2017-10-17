@@ -94,7 +94,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_lanches) {
-            // Handle the camera action
+            Intent it = new Intent(MainActivity.this, ListagemLanchesActivity.class);
+            startActivity(it);
         } else if (id == R.id.nav_insumos) {
             Intent it = new Intent(MainActivity.this, ListagemInsumosActivity.class);
             startActivity(it);
