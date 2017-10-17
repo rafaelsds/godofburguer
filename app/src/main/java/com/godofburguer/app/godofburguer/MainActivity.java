@@ -99,11 +99,12 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_insumos) {
             Intent it = new Intent(MainActivity.this, ListagemInsumosActivity.class);
             startActivity(it);
-        } else if (id == R.id.nav_fornecedores) {
-            Intent it = new Intent(MainActivity.this, ListagemFornecedoresActivity.class);
-            startActivity(it);
+
         } else if (id == R.id.nav_clientes) {
             Intent it = new Intent(MainActivity.this, ListagemClientesActivity.class);
+            startActivity(it);
+        } else if (id == R.id.nav_fornecedores) {
+            Intent it = new Intent(MainActivity.this, ListagemFornecedoresActivity.class);
             startActivity(it);
         }
 
