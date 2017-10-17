@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!--Rafael Silva-->
-
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -23,10 +20,22 @@
 
 
         <EditText
-            android:id="@+id/edtNomeIns"
+            android:id="@+id/edtNomeLanche"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/informe_nome"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/valor"
+            android:textColor="@color/black"/>
+
+        <EditText
+            android:id="@+id/edtValor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/informe_valor"/>
 
         <LinearLayout
             android:layout_width="fill_parent"
