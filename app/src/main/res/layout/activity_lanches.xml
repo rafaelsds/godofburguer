@@ -8,58 +8,59 @@
     android:padding="20dp">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/nome"
-            android:textColor="@color/black"/>
-
-
-        <EditText
-            android:id="@+id/edtNomeLanche"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/informe_nome"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/valor"
-            android:textColor="@color/black"/>
-
-        <EditText
-            android:id="@+id/edtValor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/informe_valor"/>
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <Button
-                android:layout_width="fill_parent"
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:text="@string/gravar"/>
+                android:text="@string/nome"/>
 
-            <Button
-                android:layout_width="fill_parent"
+            <EditText
+                android:id="@+id/editNomeLanche"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:text="@string/cancelar"/>
+                android:hint="@string/informe_nome"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/valor"/>
+
+            <EditText
+                android:id="@+id/editValorLanche"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/informe_valor"
+                android:inputType="numberDecimal"/>
+
+            <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnGravar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="@string/gravar" />
+
+                <Button
+                    android:id="@+id/btnCancelar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="@string/cancelar"/>
+
+            </LinearLayout>
 
         </LinearLayout>
-
-
-
     </LinearLayout>
-
-
 </ScrollView>

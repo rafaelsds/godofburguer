@@ -1,8 +1,6 @@
 package com.godofburguer.app.godofburguer.entidades;
 
-/**
- * Created by shepard363 on 17-Oct-17.
- */
+
 
 public class Fornecedores {
 
@@ -40,7 +38,7 @@ public class Fornecedores {
         this.email = email;
     }
 
-    public Fornecedores (String nome, String endereco, String telefone, String email) {
+    public Fornecedores(String nome, String endereco, String telefone, String email) {
         this.nome = nome;
         this.endereco = endereco;
         this.telefone = telefone;
@@ -51,6 +49,4 @@ public class Fornecedores {
     public String toString() {
         return  nome;
     }
-
 }
-

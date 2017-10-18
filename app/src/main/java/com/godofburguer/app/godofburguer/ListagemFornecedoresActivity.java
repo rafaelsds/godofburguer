@@ -7,19 +7,21 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.godofburguer.app.godofburguer.entidades.Fornecedores;
+import com.godofburguer.app.godofburguer.entidades.Insumos;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.godofburguer.app.godofburguer.entidades.Fornecedores;
-
 /**
- * Created by Alcino on 17-Oct-17.
+ * Rafael Silva
  */
 
 public class ListagemFornecedoresActivity extends Activity {
 
     private ListView listViewFornecedores;
-    private FloatingActionButton bttAddFornecedores;
+    private FloatingActionButton bttAddFornecedor;
 
     List<Fornecedores> listFornecedores = new ArrayList<Fornecedores>();
 
@@ -35,18 +37,20 @@ public class ListagemFornecedoresActivity extends Activity {
 
     public void inicialise(){
         listViewFornecedores = (ListView)findViewById(R.id.listaFornecedores);
-
+        listFornecedores.add(new Fornecedores("Ambev","","",""));
+        listFornecedores.add(new Fornecedores("Friboi","","",""));
+        listFornecedores.add(new Fornecedores("Perdigão","","",""));
 
 
         ArrayAdapter<Fornecedores> arrayAdapter = new ArrayAdapter<Fornecedores>(this, android.R.layout.simple_list_item_1, listFornecedores);
         listViewFornecedores.setAdapter(arrayAdapter);
 
-        bttAddFornecedores = (FloatingActionButton)findViewById(R.id.bttAddFornecedores);
+        bttAddFornecedor = (FloatingActionButton)findViewById(R.id.bttAddFornecedor);
     }
 
     public void botoes(){
 
-        bttAddFornecedores.setOnClickListener(new View.OnClickListener() {
+        bttAddFornecedor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent it = new Intent(ListagemFornecedoresActivity.this, FornecedoresActivity.class);
