@@ -15,7 +15,7 @@
         android:padding="20dp">
 
         <ListView
-            android:id="@+id/listaClientes"
+            android:id="@+id/listaLanches"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </ListView>
@@ -23,7 +23,7 @@
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/bttAddCliente"
+        android:id="@+id/bttAddLanche"
         android:backgroundTint="@color/colorPrimaryDark"
         android:src="@drawable/icon_more"
         android:layout_width="wrap_content"

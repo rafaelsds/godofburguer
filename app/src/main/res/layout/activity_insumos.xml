@@ -23,6 +23,7 @@
 
 
         <EditText
+            android:id="@+id/edtNomeIns"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/informe_nome"/>
@@ -43,7 +44,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:hint="@string/cancelar"/>
+                android:text="@string/cancelar"/>
 
         </LinearLayout>
 

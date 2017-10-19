@@ -67,15 +67,13 @@
                         android:layout_margin="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/icon_star"
-                        android:backgroundTint="@color/red"/>
+                        android:background="@drawable/icon_star"/>
 
                     <ImageButton
                         android:layout_margin="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/icon_star"
-                        android:backgroundTint="@color/red"/>
+                        android:background="@drawable/icon_star" />
 
                     <ImageButton
                         android:layout_margin="10dp"

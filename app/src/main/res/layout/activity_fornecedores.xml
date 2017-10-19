@@ -1,92 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<!--Alcino-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
+            android:text="@string/nome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/nome"
-            android:textColor="@color/black"/>
+            android:id="@+id/textNomefornencedor" />
 
         <EditText
-            android:id="@+id/edtNome"
-            android:inputType="textPersonName"
+            android:id="@+id/editNomefornencedor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/informe_nome"/>
 
         <TextView
+            android:text="@string/endereco"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/endereco"
-            android:textColor="@color/black"/>
+            android:id="@+id/textenderecofornencedor" />
 
         <EditText
-            android:id="@+id/edtEndereco"
-            android:inputType="textAutoComplete"
+            android:id="@+id/editEnderecofornencedor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/informe_o_endereco"/>
+            android:hint="@string/informe_endereco"/>
 
         <TextView
+            android:text="@string/telefone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/telefone"
-            android:textColor="@color/black"/>
+            android:id="@+id/texttelefonefornencedor" />
 
         <EditText
-            android:id="@+id/edtTelefone"
-            android:inputType="phone"
+            android:id="@+id/edittelefonefornencedor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/informe_o_telefone"/>
 
         <TextView
+            android:text="@string/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/email"
-            android:textColor="@color/black"/>
+            android:id="@+id/textemailfornencedor" />
 
         <EditText
-            android:id="@+id/edtEmail"
-            android:inputType="textEmailAddress"
+            android:id="@+id/editEmailfornencedor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/informe_o_email"/>
+            android:hint="@string/informe_email"/>
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="15dp">
 
             <Button
                 android:id="@+id/btnGravar"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:text="@string/gravar" />
+                android:text="@string/gravar"
+                android:layout_weight="0.5"/>
 
             <Button
                 android:id="@+id/btnCancelar"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:text="@string/cancelar" />
-
+                android:text="@string/cancelar"
+                android:layout_weight="0.5"/>
         </LinearLayout>
+
 
     </LinearLayout>
 
