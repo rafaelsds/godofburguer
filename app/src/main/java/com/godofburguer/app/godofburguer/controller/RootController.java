@@ -13,6 +13,6 @@ import retrofit2.http.POST;
 public class RootController {
 
 //    public  static final String URL = "https://localhost:8090/";
-    public  static final String URL = "http://a1574b79.ngrok.io";
+    public  static final String URL = "http://3de7f1c1.ngrok.io";
 
 }

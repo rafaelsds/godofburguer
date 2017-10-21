@@ -16,7 +16,4 @@
             android:title="Clientes" />
     </group>
 
-    <item android:title="Sair">
-    </item>
-
 </menu>

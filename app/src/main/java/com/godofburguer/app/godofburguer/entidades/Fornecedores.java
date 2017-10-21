@@ -4,7 +4,7 @@ package com.godofburguer.app.godofburguer.entidades;
 
 public class Fornecedores {
 
-    private String nome, endereco, telefone, email;
+    private String nome, endereco, telefone, email, id;
 
     public String getNome() {
         return nome;
@@ -38,11 +38,20 @@ public class Fornecedores {
         this.email = email;
     }
 
-    public Fornecedores(String nome, String endereco, String telefone, String email) {
+    public Fornecedores(String nome, String endereco, String telefone, String email, String id) {
         this.nome = nome;
         this.endereco = endereco;
         this.telefone = telefone;
         this.email = email;
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override

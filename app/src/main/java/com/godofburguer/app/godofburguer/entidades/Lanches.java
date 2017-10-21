@@ -4,12 +4,19 @@ package com.godofburguer.app.godofburguer.entidades;
 
 public class Lanches {
 
-    private String nome;
+    private String nome,id;
     private float valor;
+
 
     @Override
     public String toString() {
         return nome ;
+    }
+
+    public Lanches(String nome, String id, float valor) {
+        this.nome = nome;
+        this.id = id;
+        this.valor = valor;
     }
 
     public String getNome() {
@@ -20,16 +27,19 @@ public class Lanches {
         this.nome = nome;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public float getValor() {
         return valor;
     }
 
     public void setValor(float valor) {
-        this.valor = valor;
-    }
-
-    public Lanches(String nome, float valor) {
-        this.nome = nome;
         this.valor = valor;
     }
 }

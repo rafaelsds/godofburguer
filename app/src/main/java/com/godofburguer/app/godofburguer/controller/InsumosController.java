@@ -17,6 +17,10 @@ public interface InsumosController {
 
 
     @POST("inserir_insumo")
-    Call<Insumos> inserir_insumo(@Body HashMap<String, String> param);
+    Call<Boolean>inserir_insumo(@Body HashMap<String, String> param);
+
+    @POST("excluir_insumo")
+    Call<Boolean> excluir_insumo(@Body HashMap<String, String> param);
+
 
 }
