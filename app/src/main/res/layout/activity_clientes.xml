@@ -20,7 +20,7 @@
             android:textColor="@color/black"/>
 
         <EditText
-            android:id="@+id/edtNome"
+            android:id="@+id/edtNomeCliente"
             android:inputType="textPersonName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
             android:textColor="@color/black"/>
 
         <EditText
-            android:id="@+id/edtEndereco"
+            android:id="@+id/edtEnderecoCliente"
             android:inputType="textAutoComplete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
             android:textColor="@color/black"/>
 
         <EditText
-            android:id="@+id/edtTelefone"
+            android:id="@+id/edtTelefoneCliente"
             android:inputType="phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
             android:textColor="@color/black"/>
 
         <EditText
-            android:id="@+id/edtEmail"
+            android:id="@+id/edtEmailCliente"
             android:inputType="textEmailAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
             android:layout_marginTop="10dp">
 
             <Button
-                android:id="@+id/btnGravar"
+                android:id="@+id/btnGravarCliente"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
