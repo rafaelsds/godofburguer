@@ -2,7 +2,6 @@ package com.godofburguer.app.godofburguer;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.godofburguer.app.godofburguer.entidades.Indicador;
 
@@ -106,8 +104,10 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_fornecedores) {
             Intent it = new Intent(MainActivity.this, ListagemFornecedoresActivity.class);
             startActivity(it);
+        }else if (id == R.id.nav_usuarios) {
+            Intent it = new Intent(MainActivity.this, ListagemUsuariosActivity.class);
+            startActivity(it);
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

@@ -37,7 +37,7 @@
             android:inputType="textPassword" />
 
         <Button
-            android:id="@+id/btnEntrar"
+            android:id="@+id/btnLogar"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:textColor="@color/white"

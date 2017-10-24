@@ -14,6 +14,9 @@
         <item
             android:id="@+id/nav_clientes"
             android:title="Clientes" />
+        <item
+            android:id="@+id/nav_usuarios"
+            android:title="Usuarios" />
     </group>
 
 </menu>

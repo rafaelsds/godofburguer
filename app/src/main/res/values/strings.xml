@@ -39,5 +39,6 @@
     <string name="informe_email">Informe o email</string>
     <string name="valor">Valor</string>
     <string name="informe_valor">Informe o valor</string>
-
+    <string name="informe_login">Informe o login</string>
+    <string name="informe_senha">Informe a senha</string>
 </resources>
