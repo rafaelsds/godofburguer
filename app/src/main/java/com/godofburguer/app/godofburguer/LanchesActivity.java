@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.godofburguer.app.godofburguer.controller.LanchesController;
 import com.godofburguer.app.godofburguer.controller.RootController;
+import com.godofburguer.app.godofburguer.entidades.Lanches;
 
 import java.util.HashMap;
 
@@ -26,8 +27,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LanchesActivity extends Activity {
 
-    Button btnGravar;
+    Button btnCancelar,btnGravar;
     EditText edtDescricao, edtValor;
+    Intent intent;
+
+    private String idLanche;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,12 +40,21 @@ public class LanchesActivity extends Activity {
         inicialise();
         botoes();
 
+        if(intent.getSerializableExtra("lanche") != null){
+            Lanches lanches = (Lanches) intent.getSerializableExtra("lanche");
+            preencherInformacoes(lanches);
+        }else{
+            idLanche=null;
+        }
+
     }
 
     public void inicialise(){
+        btnCancelar = (Button) findViewById(R.id.btnCancelarCadLanche);
         btnGravar = (Button)findViewById(R.id.btnGravarLanche);
         edtDescricao = (EditText)findViewById(R.id.editNomeLanche);
         edtValor = (EditText)findViewById(R.id.editValorLanche);
+        intent = getIntent();
     }
 
     public void botoes(){
@@ -56,6 +69,14 @@ public class LanchesActivity extends Activity {
 
             }
         });
+
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
 
     public interface CallBack{
@@ -94,44 +115,95 @@ public class LanchesActivity extends Activity {
 
         LanchesController controler = retrofit.create(LanchesController.class);
 
-        HashMap<String, String> param = new HashMap<String, String>();
-
-        param.put("nome", edtDescricao.getText().toString());
-        param.put("valor", edtValor.getText().toString());
-
-        Call<Boolean> request = controler.inserir(param);
-
+        HashMap<String, String> param = obterHashUsuario();
 
         final ProgressDialog progressDoalog;
         progressDoalog = new ProgressDialog(LanchesActivity.this);
         progressDoalog.setMax(100);
-        progressDoalog.setMessage("Inserindo....");
+        progressDoalog.setMessage("Carregando....");
         progressDoalog.show();
 
-        request.enqueue(new Callback<Boolean>() {
-            @Override
-            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                progressDoalog.dismiss();
-                if (!response.isSuccessful()) {
-                    Toast.makeText(LanchesActivity.this, response.code(), Toast.LENGTH_SHORT).show();
-                } else {
-                    callback.call();
-                    edtDescricao.setText("");
+        if(idLanche != null){
 
-                    Intent it = new Intent(LanchesActivity.this, ListagemLanchesActivity.class);
-                    startActivity(it);
-                    finish();
+            param.put("id",idLanche);
+            idLanche=null;
+
+            Call<Boolean> request = controler.alterar(param);
+
+            request.enqueue(new Callback<Boolean>() {
+                @Override
+                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                    progressDoalog.dismiss();
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(LanchesActivity.this, "Erro: "+response.code(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        callback.call();
+                        edtDescricao.setText("");
+
+                        Intent it = new Intent(LanchesActivity.this, ListagemLanchesActivity.class);
+                        startActivity(it);
+                        finish();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<Boolean> call, Throwable t) {
-                progressDoalog.dismiss();
-                Toast.makeText(LanchesActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<Boolean> call, Throwable t) {
+                    progressDoalog.dismiss();
+                    Toast.makeText(LanchesActivity.this, "Erro: "+t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }else{
+
+            Call<Boolean> request = controler.inserir(param);
+
+            request.enqueue(new Callback<Boolean>() {
+                @Override
+                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                    progressDoalog.dismiss();
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(LanchesActivity.this, response.code(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        callback.call();
+                        edtDescricao.setText("");
+
+                        Intent it = new Intent(LanchesActivity.this, ListagemLanchesActivity.class);
+                        startActivity(it);
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Boolean> call, Throwable t) {
+                    progressDoalog.dismiss();
+                    Toast.makeText(LanchesActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    public HashMap<String, String> obterHashUsuario(){
+
+        HashMap<String, String> hashMap = new HashMap<String, String>();
+
+        hashMap.put("nome", edtDescricao.getText().toString());
+        hashMap.put("valor", edtValor.getText().toString());
+
+        return hashMap;
 
     }
 
+    public void preencherInformacoes(Lanches u){
+
+        if(u.getId() != null)
+            idLanche = u.getId();
+
+        if(u.getNome() != null)
+            edtDescricao.setText(u.getNome());
+
+        if(String.valueOf(u.getValor()) != null)
+            edtValor.setText(String.valueOf(u.getValor()));
+
+    }
 
 }

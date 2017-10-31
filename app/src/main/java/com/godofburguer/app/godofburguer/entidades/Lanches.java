@@ -1,8 +1,9 @@
 package com.godofburguer.app.godofburguer.entidades;
 
 
+import java.io.Serializable;
 
-public class Lanches {
+public class Lanches implements Serializable{
 
     private String nome,id;
     private float valor;

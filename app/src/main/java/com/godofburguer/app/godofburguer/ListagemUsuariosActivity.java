@@ -2,20 +2,31 @@ package com.godofburguer.app.godofburguer;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.godofburguer.app.godofburguer.controller.UsuariosController;
 import com.godofburguer.app.godofburguer.controller.RootController;
 import com.godofburguer.app.godofburguer.entidades.Usuarios;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,12 +43,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ListagemUsuariosActivity extends Activity {
 
-    private ListView listViewUsuarios;
     private FloatingActionButton bttAddUsuario;
     private String excluirUsuario;
+    private RecyclerView recyclerView;
 
-    private AlertDialog alerta;
-    List<Usuarios> listUsuarios = new ArrayList<Usuarios>();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +60,7 @@ public class ListagemUsuariosActivity extends Activity {
 
 
     public void inicialise(){
-        listViewUsuarios = (ListView)findViewById(R.id.listaUsuarios);
+        recyclerView = (RecyclerView)findViewById(R.id.recyclerViewUsuarios);
         bttAddUsuario = (FloatingActionButton)findViewById(R.id.bttAddUsuario);
     }
 
@@ -66,16 +75,7 @@ public class ListagemUsuariosActivity extends Activity {
             }
 ;        });
 
-        listViewUsuarios.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Object o = listViewUsuarios.getItemAtPosition(position);
-                alert_opcoes_list(o.toString());
-            }
-        });
-
     }
-
 
     public void atualizar() {
         obter(new ListagemUsuariosActivity.CallBack<List<Usuarios>>(){
@@ -84,15 +84,15 @@ public class ListagemUsuariosActivity extends Activity {
                 List<Usuarios> list = new ArrayList<Usuarios>();
 
                 for(Usuarios r : objeto){
-                    list.add(new Usuarios(r.getLogin()));
+                    list.add(new Usuarios(r.getNome(),r.getLogin(),r.getId()));
                 }
 
                 if(list == null || list.isEmpty()){
                     Toast.makeText(ListagemUsuariosActivity.this, "Nenhum registro encontrado!", Toast.LENGTH_SHORT).show();
                 }
 
-                ArrayAdapter<Usuarios> arrayAdapter = new ArrayAdapter<Usuarios>(ListagemUsuariosActivity.this, android.R.layout.simple_list_item_1, list);
-                listViewUsuarios.setAdapter(arrayAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(ListagemUsuariosActivity.this));
+                recyclerView.setAdapter(new NotesAdapter(ListagemUsuariosActivity.this,list));
 
             }
 
@@ -173,7 +173,7 @@ public class ListagemUsuariosActivity extends Activity {
 
             HashMap<String, String> param = new HashMap<String, String>();
 
-            param.put("nome", excluirUsuario);
+            param.put("id", excluirUsuario);
 
             Call<Boolean> request = controler.excluir(param);
 
@@ -206,25 +206,114 @@ public class ListagemUsuariosActivity extends Activity {
         }
     }
 
-    private void alert_opcoes_list(final String descricaoP) {
 
-        View viewOpcoesCard = getLayoutInflater().inflate(R.layout.opcoes_list,null);
+    public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
 
-        viewOpcoesCard.findViewById(R.id.bttExcluirOpcoesList).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-                excluirUsuario =descricaoP;
-                excluir();
-                alerta.dismiss();
+        private List<Usuarios> mNotes;
+        private Context mContext;
+        AlertDialog alerta;
+
+
+        public NotesAdapter(Context context, List<Usuarios> notes) {
+            mNotes = notes;
+            mContext = context;
+        }
+
+
+        @Override
+        public NotesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            Context context = parent.getContext();
+            LayoutInflater inflater = LayoutInflater.from(context);
+
+            View notesView = inflater.inflate(R.layout.card_usuarios, parent, false);
+
+            NotesAdapter.ViewHolder viewHolder = new NotesAdapter.ViewHolder(notesView);
+            return viewHolder;
+        }
+
+
+        private Context getContext() {
+            return mContext;
+        }
+
+        @Override
+        public void onBindViewHolder(NotesAdapter.ViewHolder viewHolder, final int position) {
+
+            final Usuarios notes = mNotes.get(position);
+
+            TextView id = viewHolder.id;
+            id.setText(notes.getId());
+
+            TextView nome = viewHolder.nome;
+            nome.setText(notes.getNome());
+
+            TextView login = viewHolder.login;
+            login.setText(notes.getLogin());
+
+
+            viewHolder.card.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Vibrar();
+                    alerta(notes);
+                    return false;
+                }
+            });
+
+        }
+
+
+        private void Vibrar(){
+            Vibrator rr = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            long milliseconds = 50;
+            rr.vibrate(milliseconds);
+        }
+
+
+        public void alerta(final Usuarios u){
+            AlertDialog.Builder builder = new AlertDialog.Builder(ListagemUsuariosActivity.this);
+
+            builder.setTitle("Cadastro de Usuários");
+            builder.setMessage("Escolha uma opção:");
+
+            builder.setPositiveButton("Editar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface arg0, int arg1) {
+                    Intent it = new Intent(ListagemUsuariosActivity.this, CadastroUsuarioActivity.class);
+                    it.putExtra("usuario", u);
+                    startActivity(it);
+                    finish();
+                }
+            });
+
+            builder.setNegativeButton("Excluir", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface arg0, int arg1) {
+                    excluirUsuario = u.getId();
+                    excluir();
+                }
+            });
+
+            alerta = builder.create();
+            alerta.show();
+        }
+
+        @Override
+        public int getItemCount() {
+            return mNotes.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            TextView id, nome, login;
+            CardView card;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+
+                id = (TextView)itemView.findViewById(R.id.cardIdUsuario);
+                nome = (TextView)itemView.findViewById(R.id.cardNomeUsuario);
+                login= (TextView)itemView.findViewById(R.id.cardLoginUsuario);
+                card = (CardView)itemView.findViewById(R.id.cardUsuarios);
             }
-        });
-
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(ListagemUsuariosActivity.this);
-        builder.setView(viewOpcoesCard);
-        alerta = builder.create();
-        alerta.show();
-
+        }
     }
 
 }

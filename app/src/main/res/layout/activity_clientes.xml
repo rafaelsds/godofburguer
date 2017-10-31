@@ -80,7 +80,7 @@
                 android:text="@string/gravar" />
 
             <Button
-                android:id="@+id/btnCancelar"
+                android:id="@+id/btnCancelarCadCliente"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"

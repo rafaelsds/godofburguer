@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.godofburguer.app.godofburguer.controller.ClientesController;
 import com.godofburguer.app.godofburguer.controller.RootController;
+import com.godofburguer.app.godofburguer.entidades.Clientes;
 
 import java.util.HashMap;
 
@@ -26,9 +27,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ClientesActivity extends Activity {
 
-    Button btnGravar;
+    Button btnCancelar,btnGravar;
     EditText edtDescricao, edtEmail, edtTelefone, edtEndereco;
+    Intent intent;
 
+    private String idCliente;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,16 +39,25 @@ public class ClientesActivity extends Activity {
 
         inicialise();
         botoes();
-        
+
+        if(intent.getSerializableExtra("cliente") != null){
+            Clientes clientes = (Clientes) intent.getSerializableExtra("cliente");
+            preencheInformacoes(clientes);
+        }else{
+            idCliente=null;
+        }
         
     }
 
     public void inicialise(){
         btnGravar = (Button)findViewById(R.id.btnGravarCliente);
+        btnCancelar = (Button) findViewById(R.id.btnCancelarCadCliente);
         edtDescricao = (EditText)findViewById(R.id.edtNomeCliente);
         edtEndereco = (EditText)findViewById(R.id.edtEnderecoCliente);
         edtEmail = (EditText)findViewById(R.id.edtEmailCliente);
         edtTelefone = (EditText)findViewById(R.id.edtTelefoneCliente);
+
+        intent = getIntent();
     }
 
     public void botoes(){
@@ -58,6 +70,13 @@ public class ClientesActivity extends Activity {
                     inserir();
                 }
 
+            }
+        });
+
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }
@@ -85,6 +104,19 @@ public class ClientesActivity extends Activity {
         });
     }
 
+    public HashMap<String, String> obterHashUsuario(){
+
+        HashMap<String, String> hashMap = new HashMap<String, String>();
+
+        hashMap.put("nome", edtDescricao.getText().toString());
+        hashMap.put("endereco", edtEndereco.getText().toString());
+        hashMap.put("email", edtEmail.getText().toString());
+        hashMap.put("telefone", edtTelefone.getText().toString());
+
+        return hashMap;
+
+    }
+
     public void inserir(final ClientesActivity.CallBack callback) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(RootController.URL)
@@ -93,15 +125,7 @@ public class ClientesActivity extends Activity {
 
         ClientesController controler = retrofit.create(ClientesController.class);
 
-        HashMap<String, String> param = new HashMap<String, String>();
-
-        param.put("nome", edtDescricao.getText().toString());
-        param.put("endereco", edtEndereco.getText().toString());
-        param.put("email", edtEmail.getText().toString());
-        param.put("telefone", edtTelefone.getText().toString());
-
-        Call<Boolean> request = controler.inserir(param);
-
+        HashMap<String, String> param = obterHashUsuario();
 
         final ProgressDialog progressDoalog;
         progressDoalog = new ProgressDialog(ClientesActivity.this);
@@ -109,29 +133,83 @@ public class ClientesActivity extends Activity {
         progressDoalog.setMessage("Inserindo....");
         progressDoalog.show();
 
-        request.enqueue(new Callback<Boolean>() {
-            @Override
-            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                progressDoalog.dismiss();
-                if (!response.isSuccessful()) {
-                    Toast.makeText(ClientesActivity.this, response.code(), Toast.LENGTH_SHORT).show();
-                } else {
-                    callback.call();
-                    edtDescricao.setText("");
+        if(idCliente != null) {
 
-                    Intent it = new Intent(ClientesActivity.this, ListagemClientesActivity.class);
-                    startActivity(it);
-                    finish();
+            param.put("id", idCliente);
+            idCliente = null;
+
+            Call<Boolean> request = controler.alterar(param);
+
+            request.enqueue(new Callback<Boolean>() {
+                @Override
+                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                    progressDoalog.dismiss();
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(ClientesActivity.this, response.code(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        callback.call();
+                        edtDescricao.setText("");
+
+                        Intent it = new Intent(ClientesActivity.this, ListagemClientesActivity.class);
+                        startActivity(it);
+                        finish();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<Boolean> call, Throwable t) {
-                progressDoalog.dismiss();
-                Toast.makeText(ClientesActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<Boolean> call, Throwable t) {
+                    progressDoalog.dismiss();
+                    Toast.makeText(ClientesActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
 
+        }else{
+
+
+            Call<Boolean> request = controler.inserir(param);
+
+            request.enqueue(new Callback<Boolean>() {
+                @Override
+                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                    progressDoalog.dismiss();
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(ClientesActivity.this, response.code(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        callback.call();
+                        edtDescricao.setText("");
+
+                        Intent it = new Intent(ClientesActivity.this, ListagemClientesActivity.class);
+                        startActivity(it);
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Boolean> call, Throwable t) {
+                    progressDoalog.dismiss();
+                    Toast.makeText(ClientesActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+    }
+
+    public void preencheInformacoes(Clientes u){
+        if(u.getEmail() != null)
+            edtEmail.setText(u.getEmail());
+
+        if(u.getId() != null)
+            idCliente = u.getId();
+
+        if(u.getNome() != null)
+            edtDescricao.setText(u.getNome());
+
+
+        if(u.getTelefone() != null)
+            edtTelefone.setText(u.getTelefone());
+
+        if(u.getEndereco() != null)
+            edtEndereco.setText(u.getEndereco());
     }
     
 }

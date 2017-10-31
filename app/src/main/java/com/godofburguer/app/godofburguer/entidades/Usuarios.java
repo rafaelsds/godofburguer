@@ -1,12 +1,14 @@
 package com.godofburguer.app.godofburguer.entidades;
 
+import java.io.Serializable;
+
 /**
  * Rafael Silva
  */
 
-public class Usuarios {
+public class Usuarios implements Serializable{
 
-    private String nome, endereco, telefone, email, login, senha;
+    private String nome, endereco, telefone, email, login, senha, id;
 
     public Usuarios(String nome, String endereco, String telefone, String email, String login, String senha) {
         this.nome = nome;
@@ -22,8 +24,22 @@ public class Usuarios {
         this.senha = senha;
     }
 
+    public Usuarios(String nome, String login, String id) {
+        this.nome = nome;
+        this.login = login;
+        this.id = id;
+    }
+
     public Usuarios(String login) {
         this.login = login;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getNome() {

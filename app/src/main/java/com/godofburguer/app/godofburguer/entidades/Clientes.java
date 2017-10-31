@@ -1,8 +1,9 @@
 package com.godofburguer.app.godofburguer.entidades;
 
 
+import java.io.Serializable;
 
-public class Clientes {
+public class Clientes implements Serializable{
 
     private String nome, endereco, telefone, email, id;
 

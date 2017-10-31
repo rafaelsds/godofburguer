@@ -22,5 +22,7 @@ public interface UsuariosController {
     @POST("excluir_usuario")
     Call<Boolean> excluir(@Body HashMap<String, String> param);
 
+    @POST("alterar_usuario")
+    Call<Boolean> alterar(@Body HashMap<String, String> param);
 
 }

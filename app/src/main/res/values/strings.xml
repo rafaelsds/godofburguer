@@ -41,4 +41,6 @@
     <string name="informe_valor">Informe o valor</string>
     <string name="informe_login">Informe o login</string>
     <string name="informe_senha">Informe a senha</string>
+    <string name="descricao">Descrição</string>
+    <string name="id">ID</string>
 </resources>

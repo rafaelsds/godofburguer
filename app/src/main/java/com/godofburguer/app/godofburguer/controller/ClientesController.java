@@ -23,5 +23,8 @@ public interface ClientesController {
     @POST("excluir_cliente")
     Call<Boolean> excluir(@Body HashMap<String, String> param);
 
+    @POST("alterar_cliente")
+    Call<Boolean> alterar(@Body HashMap<String, String> param);
+
 
 }

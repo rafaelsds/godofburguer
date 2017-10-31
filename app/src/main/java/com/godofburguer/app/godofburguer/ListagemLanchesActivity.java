@@ -2,20 +2,30 @@ package com.godofburguer.app.godofburguer;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.godofburguer.app.godofburguer.controller.InsumosController;
 import com.godofburguer.app.godofburguer.controller.LanchesController;
 import com.godofburguer.app.godofburguer.controller.RootController;
 import com.godofburguer.app.godofburguer.entidades.Insumos;
+import com.godofburguer.app.godofburguer.entidades.Lanches;
 import com.godofburguer.app.godofburguer.entidades.Lanches;
 
 import java.util.ArrayList;
@@ -34,12 +44,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ListagemLanchesActivity extends Activity {
 
-    private ListView listViewLanches;
+    private RecyclerView recyclerView;
     private FloatingActionButton bttAddLanche;
-
     private String excluirLanche;
-    private AlertDialog alerta;
-    List<Lanches> listLanches = new ArrayList<Lanches>();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,15 +61,7 @@ public class ListagemLanchesActivity extends Activity {
 
 
     public void inicialise(){
-        listViewLanches = (ListView)findViewById(R.id.listaLanches);
-//        listLanches.add(new Lanches("Hamburguer",25));
-//        listLanches.add(new Lanches("Refrigerante",20));
-//        listLanches.add(new Lanches("Fritas",15));
-
-
-        //ArrayAdapter<Lanches> arrayAdapter = new ArrayAdapter<Lanches>(this, android.R.layout.simple_list_item_1, listLanches);
-        //listViewLanches.setAdapter(arrayAdapter);
-
+        recyclerView = (RecyclerView)findViewById(R.id.recyclerViewLanches);
         bttAddLanche = (FloatingActionButton)findViewById(R.id.bttAddLanche);
     }
 
@@ -76,15 +75,6 @@ public class ListagemLanchesActivity extends Activity {
                 finish();
             }
         });
-
-        listViewLanches.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Object o = listViewLanches.getItemAtPosition(position);
-                alert_opcoes_list(o.toString());
-            }
-        });
-
     }
 
     public void atualizar() {
@@ -101,8 +91,8 @@ public class ListagemLanchesActivity extends Activity {
                     Toast.makeText(ListagemLanchesActivity.this, "Nenhum registro encontrado!", Toast.LENGTH_SHORT).show();
                 }
 
-                ArrayAdapter<Lanches> arrayAdapter = new ArrayAdapter<Lanches>(ListagemLanchesActivity.this, android.R.layout.simple_list_item_1, list);
-                listViewLanches.setAdapter(arrayAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(ListagemLanchesActivity.this));
+                recyclerView.setAdapter(new ListagemLanchesActivity.NotesAdapter(ListagemLanchesActivity.this,list));
 
             }
 
@@ -183,7 +173,7 @@ public class ListagemLanchesActivity extends Activity {
 
             HashMap<String, String> param = new HashMap<String, String>();
 
-            param.put("nome", excluirLanche);
+            param.put("id", excluirLanche);
 
             Call<Boolean> request = controler.excluir(param);
 
@@ -216,25 +206,113 @@ public class ListagemLanchesActivity extends Activity {
         }
     }
 
-    private void alert_opcoes_list(final String descricaoP) {
 
-        View viewOpcoesCard = getLayoutInflater().inflate(R.layout.opcoes_list,null);
+    public class NotesAdapter extends RecyclerView.Adapter<ListagemLanchesActivity.NotesAdapter.ViewHolder> {
 
-        viewOpcoesCard.findViewById(R.id.bttExcluirOpcoesList).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-                excluirLanche=descricaoP;
-                excluir();
-                alerta.dismiss();
+        private List<Lanches> mNotes;
+        private Context mContext;
+        AlertDialog alerta;
+
+
+        public NotesAdapter(Context context, List<Lanches> notes) {
+            mNotes = notes;
+            mContext = context;
+        }
+
+
+        @Override
+        public ListagemLanchesActivity.NotesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            Context context = parent.getContext();
+            LayoutInflater inflater = LayoutInflater.from(context);
+
+            View notesView = inflater.inflate(R.layout.card_lanches, parent, false);
+
+            ListagemLanchesActivity.NotesAdapter.ViewHolder viewHolder = new ListagemLanchesActivity.NotesAdapter.ViewHolder(notesView);
+            return viewHolder;
+        }
+
+
+        private Context getContext() {
+            return mContext;
+        }
+
+        @Override
+        public void onBindViewHolder(ListagemLanchesActivity.NotesAdapter.ViewHolder viewHolder, final int position) {
+
+            final Lanches notes = mNotes.get(position);
+
+            TextView id = viewHolder.id;
+            id.setText(notes.getId());
+
+            TextView nome = viewHolder.nome;
+            nome.setText(notes.getNome());
+
+            TextView valor = viewHolder.valor;
+            valor.setText(String.valueOf(notes.getValor()));
+
+            viewHolder.card.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Vibrar();
+                    alerta(notes);
+                    return false;
+                }
+            });
+
+        }
+
+
+        private void Vibrar(){
+            Vibrator rr = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            long milliseconds = 50;
+            rr.vibrate(milliseconds);
+        }
+
+
+        public void alerta(final Lanches u){
+            AlertDialog.Builder builder = new AlertDialog.Builder(ListagemLanchesActivity.this);
+
+            builder.setTitle("Cadastro de Lanches");
+            builder.setMessage("Escolha uma opção:");
+
+            builder.setPositiveButton("Editar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface arg0, int arg1) {
+                    Intent it = new Intent(ListagemLanchesActivity.this, LanchesActivity.class);
+                    it.putExtra("lanche", u);
+                    startActivity(it);
+                    finish();
+                }
+            });
+
+            builder.setNegativeButton("Excluir", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface arg0, int arg1) {
+                    excluirLanche = u.getId();
+                    excluir();
+                }
+            });
+
+            alerta = builder.create();
+            alerta.show();
+        }
+
+        @Override
+        public int getItemCount() {
+            return mNotes.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            TextView id, nome, valor;
+            CardView card;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+
+                id = (TextView)itemView.findViewById(R.id.cardIdLanche);
+                nome = (TextView)itemView.findViewById(R.id.cardDescricaoLanche);
+                valor = (TextView)itemView.findViewById(R.id.cardValorLanche);
+                card = (CardView)itemView.findViewById(R.id.cardLanches);
             }
-        });
-
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(ListagemLanchesActivity.this);
-        builder.setView(viewOpcoesCard);
-        alerta = builder.create();
-        alerta.show();
-
+        }
     }
-
+    
 }

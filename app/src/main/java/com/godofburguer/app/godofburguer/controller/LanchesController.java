@@ -23,5 +23,8 @@ public interface LanchesController {
     @POST("excluir_lanche")
     Call<Boolean> excluir(@Body HashMap<String, String> param);
 
+    @POST("alterar_lanche")
+    Call<Boolean> alterar(@Body HashMap<String, String> param);
+
 
 }

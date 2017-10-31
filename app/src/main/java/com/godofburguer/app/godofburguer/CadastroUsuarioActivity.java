@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.godofburguer.app.godofburguer.controller.RootController;
 import com.godofburguer.app.godofburguer.controller.UsuariosController;
+import com.godofburguer.app.godofburguer.entidades.Usuarios;
 
 import java.util.HashMap;
 
@@ -27,6 +28,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class CadastroUsuarioActivity extends Activity {
     private Button btnCancelar,btnGravar;
     EditText edtDescricao, edtEmail, edtTelefone, edtEndereco, edtSenha, edtLogin;
+    Intent intentCadastroUsuario;
+
+    private String idUusario;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +38,13 @@ public class CadastroUsuarioActivity extends Activity {
 
         inicialise();
         botoes();
+
+        if(intentCadastroUsuario.getSerializableExtra("usuario") != null){
+            Usuarios usuario = (Usuarios) intentCadastroUsuario.getSerializableExtra("usuario");
+            preencheUsuario(usuario);
+        }else{
+            idUusario=null;
+        }
 
     }
 
@@ -47,6 +58,8 @@ public class CadastroUsuarioActivity extends Activity {
         edtTelefone = (EditText)findViewById(R.id.edtTelefone);
         edtSenha = (EditText)findViewById(R.id.edtSenha);
         edtLogin = (EditText)findViewById(R.id.edtLogin);
+
+        intentCadastroUsuario = getIntent();
     }
 
 
@@ -93,6 +106,21 @@ public class CadastroUsuarioActivity extends Activity {
         return isValid;
     }
 
+    public HashMap<String, String> obterHashUsuario(){
+
+        HashMap<String, String> hashMap = new HashMap<String, String>();
+
+        hashMap.put("nome", edtDescricao.getText().toString());
+        hashMap.put("endereco", edtEndereco.getText().toString());
+        hashMap.put("email", edtEmail.getText().toString());
+        hashMap.put("telefone", edtTelefone.getText().toString());
+        hashMap.put("login", edtLogin.getText().toString());
+        hashMap.put("senha", edtSenha.getText().toString());
+
+        return hashMap;
+
+    }
+
     public void inserir(final CadastroUsuarioActivity.CallBack callback) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(RootController.URL)
@@ -101,46 +129,70 @@ public class CadastroUsuarioActivity extends Activity {
 
         UsuariosController controler = retrofit.create(UsuariosController.class);
 
-        HashMap<String, String> param = new HashMap<String, String>();
-
-        param.put("nome", edtDescricao.getText().toString());
-        param.put("endereco", edtEndereco.getText().toString());
-        param.put("email", edtEmail.getText().toString());
-        param.put("telefone", edtTelefone.getText().toString());
-        param.put("login", edtLogin.getText().toString());
-        param.put("senha", edtSenha.getText().toString());
-
-        Call<Boolean> request = controler.inserir(param);
+        HashMap<String, String> param = obterHashUsuario();
 
         final ProgressDialog progressDoalog;
         progressDoalog = new ProgressDialog(CadastroUsuarioActivity.this);
         progressDoalog.setMax(100);
-        progressDoalog.setMessage("Inserindo....");
+        progressDoalog.setMessage("Carregando...");
         progressDoalog.show();
 
-        request.enqueue(new Callback<Boolean>() {
-            @Override
-            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                progressDoalog.dismiss();
-                if (!response.isSuccessful()) {
-                    Toast.makeText(CadastroUsuarioActivity.this, "Erro: "+response.code(), Toast.LENGTH_SHORT).show();
-                } else {
-                    callback.call();
-                    edtDescricao.setText("");
+        if(idUusario != null) {
+            param.put("id",idUusario);
+            idUusario=null;
 
-                    Intent it = new Intent(CadastroUsuarioActivity.this, ListagemUsuariosActivity.class);
-                    startActivity(it);
-                    finish();
+            Call<Boolean> request = controler.alterar(param);
+
+            request.enqueue(new Callback<Boolean>() {
+                @Override
+                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                    progressDoalog.dismiss();
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(CadastroUsuarioActivity.this, "Erro: "+response.code(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        callback.call();
+                        edtDescricao.setText("");
+
+                        Intent it = new Intent(CadastroUsuarioActivity.this, ListagemUsuariosActivity.class);
+                        startActivity(it);
+                        finish();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<Boolean> call, Throwable t) {
-                progressDoalog.dismiss();
-                Toast.makeText(CadastroUsuarioActivity.this, "Eerro: "+t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<Boolean> call, Throwable t) {
+                    progressDoalog.dismiss();
+                    Toast.makeText(CadastroUsuarioActivity.this, "Erro: "+t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
 
+        }else{
+            Call<Boolean> request = controler.inserir(param);
+
+            request.enqueue(new Callback<Boolean>() {
+                @Override
+                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                    progressDoalog.dismiss();
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(CadastroUsuarioActivity.this, "Erro: "+response.code(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        callback.call();
+                        edtDescricao.setText("");
+
+                        Intent it = new Intent(CadastroUsuarioActivity.this, ListagemUsuariosActivity.class);
+                        startActivity(it);
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Boolean> call, Throwable t) {
+                    progressDoalog.dismiss();
+                    Toast.makeText(CadastroUsuarioActivity.this, "Erro: "+t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
     }
 
 
@@ -154,6 +206,31 @@ public class CadastroUsuarioActivity extends Activity {
             public void call() {
             }
         });
+    }
+
+
+    public void preencheUsuario(Usuarios u){
+        if(u.getEmail() != null)
+            edtEmail.setText(u.getEmail());
+
+        if(u.getId() != null)
+            idUusario = u.getId();
+
+        if(u.getNome() != null)
+            edtDescricao.setText(u.getNome());
+
+        if(u.getSenha() != null)
+            edtSenha.setText(u.getSenha());
+
+        if(u.getTelefone() != null)
+            edtTelefone.setText(u.getTelefone());
+
+        if(u.getEndereco() != null)
+            edtEndereco.setText(u.getEndereco());
+
+        if(u.getLogin() != null)
+            edtLogin.setText(u.getLogin());
+
     }
 
 }
