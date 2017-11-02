@@ -104,7 +104,7 @@ public class ListagemUsuariosActivity extends AppCompatActivity {
                 List<Usuarios> list = new ArrayList<Usuarios>();
 
                 for(Usuarios r : objeto){
-                    list.add(new Usuarios(r.getNome(),r.getLogin(),r.getId()));
+                    list.add(new Usuarios(r.getNome(),r.getEndereco(),r.getTelefone(),r.getEmail(),r.getLogin(),r.getSenha(),r.getId()));
                 }
 
                 if(list == null || list.isEmpty()){

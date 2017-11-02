@@ -10,13 +10,14 @@ public class Usuarios implements Serializable{
 
     private String nome, endereco, telefone, email, login, senha, id;
 
-    public Usuarios(String nome, String endereco, String telefone, String email, String login, String senha) {
+    public Usuarios(String nome, String endereco, String telefone, String email, String login, String senha, String id) {
         this.nome = nome;
         this.endereco = endereco;
         this.telefone = telefone;
         this.email = email;
         this.login = login;
         this.senha = senha;
+        this.id = id;
     }
 
     public Usuarios(String login, String senha) {
