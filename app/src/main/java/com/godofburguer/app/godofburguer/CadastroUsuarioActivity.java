@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Rafael Silva
  */
 
-public class CadastroUsuarioActivity extends Activity {
+public class CadastroUsuarioActivity extends AppCompatActivity {
     private Button btnCancelar,btnGravar;
     EditText edtDescricao, edtEmail, edtTelefone, edtEndereco, edtSenha, edtLogin;
     Intent intentCadastroUsuario;
@@ -49,36 +51,54 @@ public class CadastroUsuarioActivity extends Activity {
     }
 
     public void inicialise(){
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
         btnGravar = (Button)findViewById(R.id.btnGravarUsuario);
         btnCancelar = (Button) findViewById(R.id.btnCancelarCadUsuario);
-
         edtDescricao = (EditText)findViewById(R.id.edtNome);
         edtEndereco = (EditText)findViewById(R.id.edtEndereco);
         edtEmail = (EditText)findViewById(R.id.edtEmail);
         edtTelefone = (EditText)findViewById(R.id.edtTelefone);
         edtSenha = (EditText)findViewById(R.id.edtSenha);
         edtLogin = (EditText)findViewById(R.id.edtLogin);
-
         intentCadastroUsuario = getIntent();
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent myIntent = new Intent(getApplicationContext(), ListagemUsuariosActivity.class);
+        startActivityForResult(myIntent, 0);
+        finish();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent myIntent = new Intent(getApplicationContext(), ListagemUsuariosActivity.class);
+        startActivityForResult(myIntent, 0);
+        finish();
+        return;
+    }
 
     public void botoes(){
         btnGravar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HideSoftkeyBoard.hideSoftKeyboard(CadastroUsuarioActivity.this);
+            HideSoftkeyBoard.hideSoftKeyboard(CadastroUsuarioActivity.this);
 
-                if(validaDados(edtDescricao.getText().toString(), edtSenha.getText().toString(), edtLogin.getText().toString())){
-                    inserir();
-                }
+            if(validaDados(edtDescricao.getText().toString(), edtSenha.getText().toString(), edtLogin.getText().toString())){
+                inserir();
+            }
 
             }
         });
 
         btnCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v){
+                Intent it = new Intent(CadastroUsuarioActivity.this, ListagemUsuariosActivity.class);
+                startActivity(it);
                 finish();
             }
         });
@@ -151,8 +171,6 @@ public class CadastroUsuarioActivity extends Activity {
                         Toast.makeText(CadastroUsuarioActivity.this, "Erro: "+response.code(), Toast.LENGTH_SHORT).show();
                     } else {
                         callback.call();
-                        edtDescricao.setText("");
-
                         Intent it = new Intent(CadastroUsuarioActivity.this, ListagemUsuariosActivity.class);
                         startActivity(it);
                         finish();
@@ -177,8 +195,6 @@ public class CadastroUsuarioActivity extends Activity {
                         Toast.makeText(CadastroUsuarioActivity.this, "Erro: "+response.code(), Toast.LENGTH_SHORT).show();
                     } else {
                         callback.call();
-                        edtDescricao.setText("");
-
                         Intent it = new Intent(CadastroUsuarioActivity.this, ListagemUsuariosActivity.class);
                         startActivity(it);
                         finish();

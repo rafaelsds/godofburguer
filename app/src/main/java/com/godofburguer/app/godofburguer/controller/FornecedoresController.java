@@ -23,5 +23,7 @@ public interface FornecedoresController {
     @POST("excluir_fornecedor")
     Call<Boolean> excluir(@Body HashMap<String, String> param);
 
+    @POST("alterar_fornecedor")
+    Call<Boolean> update(@Body HashMap<String, String> param);
 
 }

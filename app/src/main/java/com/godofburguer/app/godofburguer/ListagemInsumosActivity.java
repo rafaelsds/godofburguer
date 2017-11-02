@@ -3,19 +3,29 @@ package com.godofburguer.app.godofburguer;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.godofburguer.app.godofburguer.controller.InsumosController;
 import com.godofburguer.app.godofburguer.controller.RootController;
+import com.godofburguer.app.godofburguer.entidades.Insumos;
 import com.godofburguer.app.godofburguer.entidades.Insumos;
 
 import java.util.ArrayList;
@@ -34,7 +44,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ListagemInsumosActivity extends AppCompatActivity {
 
-    private ListView listViewInsumos;
+    private RecyclerView recyclerView;
     private FloatingActionButton bttAddInsumo;
     private AlertDialog alerta;
     private String insumoExcluir;
@@ -54,9 +64,29 @@ public class ListagemInsumosActivity extends AppCompatActivity {
 
 
     public void inicialise(){
-        listViewInsumos = (ListView)findViewById(R.id.listaInsumos);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        recyclerView = (RecyclerView)findViewById(R.id.recyclerViewInsumos);
         bttAddInsumo = (FloatingActionButton)findViewById(R.id.bttAddInsumo);
     }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivityForResult(myIntent, 0);
+        finish();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivityForResult(myIntent, 0);
+        finish();
+        return;
+    }
+
 
     public void botoes(){
 
@@ -68,14 +98,7 @@ public class ListagemInsumosActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-        listViewInsumos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Object o = listViewInsumos.getItemAtPosition(position);
-                alert_opcoes_list(o.toString());
-            }
-        });
+        
     }
 
     public interface CallBack<T>{
@@ -94,8 +117,8 @@ public class ListagemInsumosActivity extends AppCompatActivity {
                     list.add(new Insumos(r.getNome(),r.getId()));
                 }
 
-                ArrayAdapter<Insumos> arrayAdapter = new ArrayAdapter<Insumos>(ListagemInsumosActivity.this, android.R.layout.simple_list_item_1, list);
-                listViewInsumos.setAdapter(arrayAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(ListagemInsumosActivity.this));
+                recyclerView.setAdapter(new ListagemInsumosActivity.NotesAdapter(ListagemInsumosActivity.this,list));
 
             }
 
@@ -175,7 +198,7 @@ public class ListagemInsumosActivity extends AppCompatActivity {
 
             HashMap<String, String> param = new HashMap<String, String>();
 
-            param.put("nome", insumoExcluir);
+            param.put("id", insumoExcluir);
 
             Call<Boolean> request = controler.excluir_insumo(param);
 
@@ -208,27 +231,110 @@ public class ListagemInsumosActivity extends AppCompatActivity {
         }
     }
 
-    private void alert_opcoes_list(final String descricaoP) {
+
+    public class NotesAdapter extends RecyclerView.Adapter<ListagemInsumosActivity.NotesAdapter.ViewHolder> {
+
+        private List<Insumos> mNotes;
+        private Context mContext;
+        AlertDialog alerta;
 
 
+        public NotesAdapter(Context context, List<Insumos> notes) {
+            mNotes = notes;
+            mContext = context;
+        }
 
-        View viewOpcoesCard = getLayoutInflater().inflate(R.layout.opcoes_list,null);
 
-        viewOpcoesCard.findViewById(R.id.bttExcluirOpcoesList).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-                insumoExcluir=descricaoP;
-                excluirInsumo();
-                alerta.dismiss();
+        @Override
+        public ListagemInsumosActivity.NotesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            Context context = parent.getContext();
+            LayoutInflater inflater = LayoutInflater.from(context);
+
+            View notesView = inflater.inflate(R.layout.card_insumos, parent, false);
+
+            ListagemInsumosActivity.NotesAdapter.ViewHolder viewHolder = new ListagemInsumosActivity.NotesAdapter.ViewHolder(notesView);
+            return viewHolder;
+        }
+
+
+        private Context getContext() {
+            return mContext;
+        }
+
+        @Override
+        public void onBindViewHolder(ListagemInsumosActivity.NotesAdapter.ViewHolder viewHolder, final int position) {
+
+            final Insumos notes = mNotes.get(position);
+
+            TextView id = viewHolder.id;
+            id.setText(notes.getId());
+
+            TextView nome = viewHolder.nome;
+            nome.setText(notes.getNome());
+
+
+            viewHolder.card.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Vibrar();
+                    alerta(notes);
+                    return false;
+                }
+            });
+
+        }
+
+
+        private void Vibrar(){
+            Vibrator rr = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            long milliseconds = 50;
+            rr.vibrate(milliseconds);
+        }
+
+
+        public void alerta(final Insumos u){
+            AlertDialog.Builder builder = new AlertDialog.Builder(ListagemInsumosActivity.this);
+
+            builder.setTitle("Cadastro de Insumos");
+            builder.setMessage("Escolha uma opção:");
+
+            builder.setPositiveButton("Editar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface arg0, int arg1) {
+                    Intent it = new Intent(ListagemInsumosActivity.this, InsumosActivity.class);
+                    it.putExtra("insumo", u);
+                    startActivity(it);
+                    finish();
+                }
+            });
+
+            builder.setNegativeButton("Excluir", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface arg0, int arg1) {
+                    insumoExcluir = u.getId();
+                    excluirInsumo();
+                }
+            });
+
+            alerta = builder.create();
+            alerta.show();
+        }
+
+        @Override
+        public int getItemCount() {
+            return mNotes.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            TextView id, nome;
+            CardView card;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+
+                id = (TextView)itemView.findViewById(R.id.cardIdInsumo);
+                nome = (TextView)itemView.findViewById(R.id.cardDescricaoInsumo);
+                card = (CardView)itemView.findViewById(R.id.cardInsumos);
             }
-        });
-
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(ListagemInsumosActivity.this);
-        builder.setView(viewOpcoesCard);
-        alerta = builder.create();
-        alerta.show();
-
+        }
     }
 
 

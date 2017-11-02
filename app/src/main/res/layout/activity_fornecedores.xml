@@ -1,85 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Alcino-->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="20dp">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
 
-        <TextView
-            android:text="@string/nome"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textNomefornencedor" />
-
-        <EditText
-            android:id="@+id/editNomefornencedor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/informe_nome"/>
-
-        <TextView
-            android:text="@string/endereco"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textenderecofornencedor" />
-
-        <EditText
-            android:id="@+id/editEnderecofornencedor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/informe_endereco"/>
-
-        <TextView
-            android:text="@string/telefone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/texttelefonefornencedor" />
-
-        <EditText
-            android:id="@+id/edittelefonefornencedor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/informe_o_telefone"/>
-
-        <TextView
-            android:text="@string/email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textemailfornencedor" />
-
-        <EditText
-            android:id="@+id/editEmailfornencedor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/informe_email"/>
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="15dp">
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/btnGravarFornecedor"
+            <TextView
+                android:text="@string/nome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/gravar"
-                android:layout_weight="0.5"/>
+                android:id="@+id/textNomefornencedor" />
 
-            <Button
-                android:id="@+id/btnCancelarCadCliente"
+            <EditText
+                android:id="@+id/editNomefornencedor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/cancelar"
-                android:layout_weight="0.5"/>
+                android:hint="@string/informe_nome"/>
+
+            <TextView
+                android:text="@string/endereco"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textenderecofornencedor" />
+
+            <EditText
+                android:id="@+id/editEnderecofornencedor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/informe_endereco"/>
+
+            <TextView
+                android:text="@string/telefone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/texttelefonefornencedor" />
+
+            <EditText
+                android:id="@+id/edittelefonefornencedor"
+                android:inputType="phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/informe_o_telefone"/>
+
+            <TextView
+                android:text="@string/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textemailfornencedor" />
+
+            <EditText
+                android:id="@+id/editEmailfornencedor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/informe_email"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp">
+
+                <Button
+                    android:id="@+id/btnGravarFornecedor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gravar"
+                    android:layout_weight="0.5"/>
+
+                <Button
+                    android:id="@+id/btnCancelarCadFornecedor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cancelar"
+                    android:layout_weight="0.5"/>
+            </LinearLayout>
+
+
         </LinearLayout>
 
+    </ScrollView>
 
-    </LinearLayout>
-
-</ScrollView>
+</LinearLayout>

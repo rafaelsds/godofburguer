@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Rafael Silva
  */
 
-public class ClientesActivity extends Activity {
+public class ClientesActivity extends AppCompatActivity {
 
     Button btnCancelar,btnGravar;
     EditText edtDescricao, edtEmail, edtTelefone, edtEndereco;
@@ -50,15 +52,34 @@ public class ClientesActivity extends Activity {
     }
 
     public void inicialise(){
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
         btnGravar = (Button)findViewById(R.id.btnGravarCliente);
         btnCancelar = (Button) findViewById(R.id.btnCancelarCadCliente);
         edtDescricao = (EditText)findViewById(R.id.edtNomeCliente);
         edtEndereco = (EditText)findViewById(R.id.edtEnderecoCliente);
         edtEmail = (EditText)findViewById(R.id.edtEmailCliente);
         edtTelefone = (EditText)findViewById(R.id.edtTelefoneCliente);
-
         intent = getIntent();
     }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent myIntent = new Intent(getApplicationContext(), ListagemClientesActivity.class);
+        startActivityForResult(myIntent, 0);
+        finish();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent myIntent = new Intent(getApplicationContext(), ListagemClientesActivity.class);
+        startActivityForResult(myIntent, 0);
+        finish();
+        return;
+    }
+
 
     public void botoes(){
         btnGravar.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +97,8 @@ public class ClientesActivity extends Activity {
         btnCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent it = new Intent(ClientesActivity.this, ListagemClientesActivity.class);
+                startActivity(it);
                 finish();
             }
         });
@@ -148,8 +171,6 @@ public class ClientesActivity extends Activity {
                         Toast.makeText(ClientesActivity.this, response.code(), Toast.LENGTH_SHORT).show();
                     } else {
                         callback.call();
-                        edtDescricao.setText("");
-
                         Intent it = new Intent(ClientesActivity.this, ListagemClientesActivity.class);
                         startActivity(it);
                         finish();
@@ -165,7 +186,6 @@ public class ClientesActivity extends Activity {
 
         }else{
 
-
             Call<Boolean> request = controler.inserir(param);
 
             request.enqueue(new Callback<Boolean>() {
@@ -176,8 +196,6 @@ public class ClientesActivity extends Activity {
                         Toast.makeText(ClientesActivity.this, response.code(), Toast.LENGTH_SHORT).show();
                     } else {
                         callback.call();
-                        edtDescricao.setText("");
-
                         Intent it = new Intent(ClientesActivity.this, ListagemClientesActivity.class);
                         startActivity(it);
                         finish();

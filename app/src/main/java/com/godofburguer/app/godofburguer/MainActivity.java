@@ -94,19 +94,24 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_lanches) {
             Intent it = new Intent(MainActivity.this, ListagemLanchesActivity.class);
             startActivity(it);
+            finish();
         } else if (id == R.id.nav_insumos) {
             Intent it = new Intent(MainActivity.this, ListagemInsumosActivity.class);
             startActivity(it);
+            finish();
 
         } else if (id == R.id.nav_clientes) {
             Intent it = new Intent(MainActivity.this, ListagemClientesActivity.class);
             startActivity(it);
+            finish();
         } else if (id == R.id.nav_fornecedores) {
             Intent it = new Intent(MainActivity.this, ListagemFornecedoresActivity.class);
             startActivity(it);
+            finish();
         }else if (id == R.id.nav_usuarios) {
             Intent it = new Intent(MainActivity.this, ListagemUsuariosActivity.class);
             startActivity(it);
+            finish();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

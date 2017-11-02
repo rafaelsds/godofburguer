@@ -1,8 +1,9 @@
 package com.godofburguer.app.godofburguer.entidades;
 
 
+import java.io.Serializable;
 
-public class Fornecedores {
+public class Fornecedores implements Serializable{
 
     private String nome, endereco, telefone, email, id;
 

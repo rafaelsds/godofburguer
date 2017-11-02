@@ -1,8 +1,9 @@
 package com.godofburguer.app.godofburguer.entidades;
 
 
+import java.io.Serializable;
 
-public class Insumos {
+public class Insumos implements Serializable{
 
     private String nome, id;
 

@@ -9,10 +9,12 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -41,14 +43,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Rafael Silva
  */
 
-public class ListagemClientesActivity extends Activity {
+public class ListagemClientesActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private FloatingActionButton bttAddCliente;
     private String excluirCliente;
 
-    private AlertDialog alerta;
-    List<Clientes> listClientes = new ArrayList<Clientes>();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,8 +62,27 @@ public class ListagemClientesActivity extends Activity {
 
 
     public void inicialise(){
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerViewClientes);
         bttAddCliente = (FloatingActionButton)findViewById(R.id.bttAddCliente);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivityForResult(myIntent, 0);
+        finish();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivityForResult(myIntent, 0);
+        finish();
+        return;
     }
 
     public void botoes(){

@@ -2,19 +2,31 @@ package com.godofburguer.app.godofburguer;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.godofburguer.app.godofburguer.controller.FornecedoresController;
 import com.godofburguer.app.godofburguer.controller.LanchesController;
 import com.godofburguer.app.godofburguer.controller.RootController;
+import com.godofburguer.app.godofburguer.entidades.Fornecedores;
 import com.godofburguer.app.godofburguer.entidades.Fornecedores;
 import com.godofburguer.app.godofburguer.entidades.Insumos;
 import com.godofburguer.app.godofburguer.entidades.Lanches;
@@ -33,16 +45,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Rafael Silva
  */
 
-public class ListagemFornecedoresActivity extends Activity {
+public class ListagemFornecedoresActivity extends AppCompatActivity{
 
-    private ListView listViewFornecedores;
+    private RecyclerView recyclerView;
     private FloatingActionButton bttAddFornecedor;
     private String excluirFornecedor;
 
     private AlertDialog alerta;
-
-    List<Fornecedores> listFornecedores = new ArrayList<Fornecedores>();
-
+    
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listagem_fornecedores);
@@ -55,8 +65,26 @@ public class ListagemFornecedoresActivity extends Activity {
 
 
     public void inicialise(){
-        listViewFornecedores = (ListView)findViewById(R.id.listaFornecedores);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        recyclerView = (RecyclerView)findViewById(R.id.recyclerViewFornecedores);
         bttAddFornecedor = (FloatingActionButton)findViewById(R.id.bttAddFornecedor);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivityForResult(myIntent, 0);
+        finish();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivityForResult(myIntent, 0);
+        finish();
+        return;
     }
 
     public void botoes(){
@@ -69,15 +97,7 @@ public class ListagemFornecedoresActivity extends Activity {
                 finish();
             }
         });
-
-        listViewFornecedores.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Object o = listViewFornecedores.getItemAtPosition(position);
-                alert_opcoes_list(o.toString());
-            }
-        });
-
+        
     }
 
     public void atualizar() {
@@ -94,8 +114,9 @@ public class ListagemFornecedoresActivity extends Activity {
                     Toast.makeText(ListagemFornecedoresActivity.this, "Nenhum registro encontrado!", Toast.LENGTH_SHORT).show();
                 }
 
-                ArrayAdapter<Fornecedores> arrayAdapter = new ArrayAdapter<Fornecedores>(ListagemFornecedoresActivity.this, android.R.layout.simple_list_item_1, list);
-                listViewFornecedores.setAdapter(arrayAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(ListagemFornecedoresActivity.this));
+                recyclerView.setAdapter(new ListagemFornecedoresActivity.NotesAdapter(ListagemFornecedoresActivity.this,list));
+
 
             }
 
@@ -176,7 +197,7 @@ public class ListagemFornecedoresActivity extends Activity {
 
             HashMap<String, String> param = new HashMap<String, String>();
 
-            param.put("nome", excluirFornecedor);
+            param.put("id", excluirFornecedor);
 
             Call<Boolean> request = controler.excluir(param);
 
@@ -209,25 +230,113 @@ public class ListagemFornecedoresActivity extends Activity {
         }
     }
 
-    private void alert_opcoes_list(final String descricaoP) {
+    public class NotesAdapter extends RecyclerView.Adapter<ListagemFornecedoresActivity.NotesAdapter.ViewHolder> {
 
-        View viewOpcoesCard = getLayoutInflater().inflate(R.layout.opcoes_list,null);
+        private List<Fornecedores> mNotes;
+        private Context mContext;
+        AlertDialog alerta;
 
-        viewOpcoesCard.findViewById(R.id.bttExcluirOpcoesList).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-                excluirFornecedor=descricaoP;
-                excluir();
-                alerta.dismiss();
+
+        public NotesAdapter(Context context, List<Fornecedores> notes) {
+            mNotes = notes;
+            mContext = context;
+        }
+
+
+        @Override
+        public ListagemFornecedoresActivity.NotesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            Context context = parent.getContext();
+            LayoutInflater inflater = LayoutInflater.from(context);
+
+            View notesView = inflater.inflate(R.layout.card_fornecedores, parent, false);
+
+            ListagemFornecedoresActivity.NotesAdapter.ViewHolder viewHolder = new ListagemFornecedoresActivity.NotesAdapter.ViewHolder(notesView);
+            return viewHolder;
+        }
+
+
+        private Context getContext() {
+            return mContext;
+        }
+
+        @Override
+        public void onBindViewHolder(ListagemFornecedoresActivity.NotesAdapter.ViewHolder viewHolder, final int position) {
+
+            final Fornecedores notes = mNotes.get(position);
+
+            TextView id = viewHolder.id;
+            id.setText(notes.getId());
+
+            TextView nome = viewHolder.nome;
+            nome.setText(notes.getNome());
+
+            TextView telefone = viewHolder.telefone;
+            telefone.setText(notes.getTelefone());
+
+
+            viewHolder.card.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Vibrar();
+                    alerta(notes);
+                    return false;
+                }
+            });
+
+        }
+
+
+        private void Vibrar(){
+            Vibrator rr = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            long milliseconds = 50;
+            rr.vibrate(milliseconds);
+        }
+
+
+        public void alerta(final Fornecedores u){
+            AlertDialog.Builder builder = new AlertDialog.Builder(ListagemFornecedoresActivity.this);
+
+            builder.setTitle("Cadastro de Fornecedores");
+            builder.setMessage("Escolha uma opção:");
+
+            builder.setPositiveButton("Editar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface arg0, int arg1) {
+                    Intent it = new Intent(ListagemFornecedoresActivity.this, FornecedoresActivity.class);
+                    it.putExtra("fornecedor", u);
+                    startActivity(it);
+                    finish();
+                }
+            });
+
+            builder.setNegativeButton("Excluir", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface arg0, int arg1) {
+                    excluirFornecedor = u.getId();
+                    excluir();
+                }
+            });
+
+            alerta = builder.create();
+            alerta.show();
+        }
+
+        @Override
+        public int getItemCount() {
+            return mNotes.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            TextView id, nome, telefone;
+            CardView card;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+
+                id = (TextView)itemView.findViewById(R.id.cardIdFornecedor);
+                nome = (TextView)itemView.findViewById(R.id.cardNomeFornecedor);
+                telefone= (TextView)itemView.findViewById(R.id.cardTelefoneFornecedor);
+                card = (CardView)itemView.findViewById(R.id.cardFornecedores);
             }
-        });
-
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(ListagemFornecedoresActivity.this);
-        builder.setView(viewOpcoesCard);
-        alerta = builder.create();
-        alerta.show();
-
+        }
     }
 
 }

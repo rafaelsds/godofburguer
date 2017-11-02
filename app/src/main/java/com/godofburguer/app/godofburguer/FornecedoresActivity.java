@@ -1,9 +1,14 @@
 package com.godofburguer.app.godofburguer;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,6 +16,7 @@ import android.widget.Toast;
 
 import com.godofburguer.app.godofburguer.controller.FornecedoresController;
 import com.godofburguer.app.godofburguer.controller.RootController;
+import com.godofburguer.app.godofburguer.entidades.Fornecedores;
 
 import java.util.HashMap;
 
@@ -24,10 +30,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Rafael Silva
  */
 
-public class FornecedoresActivity extends Activity {
+public class FornecedoresActivity extends AppCompatActivity {
 
-    Button btnGravar;
+    Button btnCancelar,btnGravar;
     EditText edtDescricao, edtEmail, edtTelefone, edtEndereco;
+    Intent intent;
+
+    private String idFornecedor;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,14 +45,41 @@ public class FornecedoresActivity extends Activity {
         inicialise();
         botoes();
 
+        if(intent.getSerializableExtra("fornecedor") != null){
+            Fornecedores f = (Fornecedores) intent.getSerializableExtra("fornecedor");
+            preencheInformacoes(f);
+        }else{
+            idFornecedor=null;
+        }
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent myIntent = new Intent(getApplicationContext(), ListagemFornecedoresActivity.class);
+        startActivityForResult(myIntent, 0);
+        finish();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent myIntent = new Intent(getApplicationContext(), ListagemFornecedoresActivity.class);
+        startActivityForResult(myIntent, 0);
+        finish();
+        return;
     }
 
     public void inicialise(){
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        btnCancelar = (Button) findViewById(R.id.btnCancelarCadFornecedor);
         btnGravar = (Button)findViewById(R.id.btnGravarFornecedor);
         edtDescricao = (EditText)findViewById(R.id.editNomefornencedor);
         edtEndereco = (EditText)findViewById(R.id.editEnderecofornencedor);
         edtEmail = (EditText)findViewById(R.id.editEmailfornencedor);
         edtTelefone = (EditText)findViewById(R.id.edittelefonefornencedor);
+        intent = getIntent();
     }
 
     public void botoes(){
@@ -58,6 +94,16 @@ public class FornecedoresActivity extends Activity {
 
             }
         });
+
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(FornecedoresActivity.this, ListagemFornecedoresActivity.class);
+                startActivity(it);
+                finish();
+            }
+        });
+
     }
 
     public boolean validaDados(String descricao) {
@@ -83,6 +129,40 @@ public class FornecedoresActivity extends Activity {
         });
     }
 
+
+    public void preencheInformacoes(Fornecedores u){
+        if(u.getEmail() != null)
+            edtEmail.setText(u.getEmail());
+
+        if(u.getId() != null)
+            idFornecedor = u.getId();
+
+        if(u.getNome() != null)
+            edtDescricao.setText(u.getNome());
+
+
+        if(u.getTelefone() != null)
+            edtTelefone.setText(u.getTelefone());
+
+        if(u.getEndereco() != null)
+            edtEndereco.setText(u.getEndereco());
+    }
+
+
+    public HashMap<String, String> obterHashUsuario(){
+
+        HashMap<String, String> hashMap = new HashMap<String, String>();
+
+        hashMap.put("nome", edtDescricao.getText().toString());
+        hashMap.put("endereco", edtEndereco.getText().toString());
+        hashMap.put("email", edtEmail.getText().toString());
+        hashMap.put("telefone", edtTelefone.getText().toString());
+
+        return hashMap;
+
+    }
+
+
     public void inserir(final FornecedoresActivity.CallBack callback) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(RootController.URL)
@@ -91,44 +171,69 @@ public class FornecedoresActivity extends Activity {
 
         FornecedoresController controler = retrofit.create(FornecedoresController.class);
 
-        HashMap<String, String> param = new HashMap<String, String>();
-
-        param.put("nome", edtDescricao.getText().toString());
-        param.put("endereco", edtEndereco.getText().toString());
-        param.put("email", edtEmail.getText().toString());
-        param.put("telefone", edtTelefone.getText().toString());
-
-        Call<Boolean> request = controler.inserir(param);
-
+        HashMap<String, String> param = obterHashUsuario();
 
         final ProgressDialog progressDoalog;
         progressDoalog = new ProgressDialog(FornecedoresActivity.this);
         progressDoalog.setMax(100);
-        progressDoalog.setMessage("Inserindo....");
+        progressDoalog.setMessage("Carregando....");
         progressDoalog.show();
 
-        request.enqueue(new Callback<Boolean>() {
-            @Override
-            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                progressDoalog.dismiss();
-                if (!response.isSuccessful()) {
-                    Toast.makeText(FornecedoresActivity.this, response.code(), Toast.LENGTH_SHORT).show();
-                } else {
-                    callback.call();
-                    edtDescricao.setText("");
 
-                    Intent it = new Intent(FornecedoresActivity.this, ListagemFornecedoresActivity.class);
-                    startActivity(it);
-                    finish();
+        if(idFornecedor != null) {
+
+            param.put("id", idFornecedor);
+            idFornecedor = null;
+
+            Call<Boolean> request = controler.update(param);
+
+            request.enqueue(new Callback<Boolean>() {
+                @Override
+                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                    progressDoalog.dismiss();
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(FornecedoresActivity.this, response.code(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        callback.call();
+                        Intent it = new Intent(FornecedoresActivity.this, ListagemFornecedoresActivity.class);
+                        startActivity(it);
+                        finish();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<Boolean> call, Throwable t) {
-                progressDoalog.dismiss();
-                Toast.makeText(FornecedoresActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<Boolean> call, Throwable t) {
+                    progressDoalog.dismiss();
+                    Toast.makeText(FornecedoresActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }else{
+
+            Call<Boolean> request = controler.inserir(param);
+
+            request.enqueue(new Callback<Boolean>() {
+                @Override
+                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                    progressDoalog.dismiss();
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(FornecedoresActivity.this, response.code(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        callback.call();
+                        Intent it = new Intent(FornecedoresActivity.this, ListagemFornecedoresActivity.class);
+                        startActivity(it);
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Boolean> call, Throwable t) {
+                    progressDoalog.dismiss();
+                    Toast.makeText(FornecedoresActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
 
     }
 

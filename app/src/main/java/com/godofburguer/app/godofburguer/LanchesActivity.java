@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Rafael Silva
  */
 
-public class LanchesActivity extends Activity {
+public class LanchesActivity extends AppCompatActivity {
 
     Button btnCancelar,btnGravar;
     EditText edtDescricao, edtValor;
@@ -50,12 +52,32 @@ public class LanchesActivity extends Activity {
     }
 
     public void inicialise(){
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
         btnCancelar = (Button) findViewById(R.id.btnCancelarCadLanche);
         btnGravar = (Button)findViewById(R.id.btnGravarLanche);
         edtDescricao = (EditText)findViewById(R.id.editNomeLanche);
         edtValor = (EditText)findViewById(R.id.editValorLanche);
         intent = getIntent();
     }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent myIntent = new Intent(getApplicationContext(), ListagemLanchesActivity.class);
+        startActivityForResult(myIntent, 0);
+        finish();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent myIntent = new Intent(getApplicationContext(), ListagemLanchesActivity.class);
+        startActivityForResult(myIntent, 0);
+        finish();
+        return;
+    }
+
 
     public void botoes(){
         btnGravar.setOnClickListener(new View.OnClickListener() {
@@ -73,6 +95,8 @@ public class LanchesActivity extends Activity {
         btnCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent it = new Intent(LanchesActivity.this, ListagemLanchesActivity.class);
+                startActivity(it);
                 finish();
             }
         });
@@ -138,8 +162,6 @@ public class LanchesActivity extends Activity {
                         Toast.makeText(LanchesActivity.this, "Erro: "+response.code(), Toast.LENGTH_SHORT).show();
                     } else {
                         callback.call();
-                        edtDescricao.setText("");
-
                         Intent it = new Intent(LanchesActivity.this, ListagemLanchesActivity.class);
                         startActivity(it);
                         finish();
@@ -165,8 +187,6 @@ public class LanchesActivity extends Activity {
                         Toast.makeText(LanchesActivity.this, response.code(), Toast.LENGTH_SHORT).show();
                     } else {
                         callback.call();
-                        edtDescricao.setText("");
-
                         Intent it = new Intent(LanchesActivity.this, ListagemLanchesActivity.class);
                         startActivity(it);
                         finish();

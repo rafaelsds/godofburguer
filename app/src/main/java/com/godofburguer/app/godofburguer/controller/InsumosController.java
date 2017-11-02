@@ -22,5 +22,7 @@ public interface InsumosController {
     @POST("excluir_insumo")
     Call<Boolean> excluir_insumo(@Body HashMap<String, String> param);
 
+    @POST("alterar_insumo")
+    Call<Boolean> update(@Body HashMap<String, String> param);
 
 }

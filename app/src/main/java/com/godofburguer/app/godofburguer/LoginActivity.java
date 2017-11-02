@@ -42,12 +42,15 @@ public class LoginActivity extends Activity {
         btnLogar = (Button) findViewById(R.id.btnLogar);
         btnSair = (Button) findViewById(R.id.btnSair);
 
+        loginEdit = (EditText) findViewById(R.id.editUser);
+        senhaEdit = (EditText) findViewById(R.id.editSenha);
+
+        loginEdit.setText("adm");
+        senhaEdit.setText("adm");
+
         btnLogar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginEdit = (EditText) findViewById(R.id.editUser);
-                senhaEdit = (EditText) findViewById(R.id.editSenha);
-
                 if (validaLogin(loginEdit.getText().toString(),
                         senhaEdit.getText().toString())){
                     HideSoftkeyBoard.hideSoftKeyboard(LoginActivity.this);
