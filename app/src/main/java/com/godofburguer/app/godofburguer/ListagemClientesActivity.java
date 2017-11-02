@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.fabtransitionactivity.SheetLayout;
 import com.godofburguer.app.godofburguer.controller.ClientesController;
 import com.godofburguer.app.godofburguer.controller.RootController;
 import com.godofburguer.app.godofburguer.entidades.Clientes;
@@ -43,12 +44,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Rafael Silva
  */
 
-public class ListagemClientesActivity extends AppCompatActivity {
+public class ListagemClientesActivity extends AppCompatActivity implements SheetLayout.OnFabAnimationEndListener{
 
     private RecyclerView recyclerView;
     private FloatingActionButton bttAddCliente;
+    private SheetLayout mSheetLayout;
     private String excluirCliente;
 
+    private static final int REQUEST_CODE = 1;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +69,25 @@ public class ListagemClientesActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerViewClientes);
         bttAddCliente = (FloatingActionButton)findViewById(R.id.bttAddCliente);
+        mSheetLayout = (SheetLayout)findViewById(R.id.bottom_sheet_clientes);
+        mSheetLayout.setFab(bttAddCliente);
+        mSheetLayout.setFabAnimationEndListener(this);
+    }
+
+
+    @Override
+    public void onFabAnimationEnd() {
+        Intent intent = new Intent(this, ClientesActivity.class);
+        startActivityForResult(intent, REQUEST_CODE);
+        finish();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE){
+            mSheetLayout.contractFab();
+        }
     }
 
 
@@ -90,9 +112,7 @@ public class ListagemClientesActivity extends AppCompatActivity {
         bttAddCliente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(ListagemClientesActivity.this, ClientesActivity.class);
-                startActivity(it);
-                finish();
+                mSheetLayout.expandFab();
             }
 ;        });
         

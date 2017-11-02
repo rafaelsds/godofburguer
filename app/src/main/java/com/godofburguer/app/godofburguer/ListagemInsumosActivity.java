@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.fabtransitionactivity.SheetLayout;
 import com.godofburguer.app.godofburguer.controller.InsumosController;
 import com.godofburguer.app.godofburguer.controller.RootController;
 import com.godofburguer.app.godofburguer.entidades.Insumos;
@@ -42,12 +43,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Rafael Silva
  */
 
-public class ListagemInsumosActivity extends AppCompatActivity {
+public class ListagemInsumosActivity extends AppCompatActivity implements SheetLayout.OnFabAnimationEndListener{
 
     private RecyclerView recyclerView;
     private FloatingActionButton bttAddInsumo;
-    private AlertDialog alerta;
+    private SheetLayout mSheetLayout;
     private String insumoExcluir;
+
+    private static final int REQUEST_CODE = 1;
 
     List<Insumos>listInsumos = new ArrayList<Insumos>();
 
@@ -68,8 +71,25 @@ public class ListagemInsumosActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerViewInsumos);
         bttAddInsumo = (FloatingActionButton)findViewById(R.id.bttAddInsumo);
+        mSheetLayout = (SheetLayout)findViewById(R.id.bottom_sheet_insumos);
+        mSheetLayout.setFab(bttAddInsumo);
+        mSheetLayout.setFabAnimationEndListener(this);
     }
 
+    @Override
+    public void onFabAnimationEnd() {
+        Intent intent = new Intent(this, InsumosActivity.class);
+        startActivityForResult(intent, REQUEST_CODE);
+        finish();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE){
+            mSheetLayout.contractFab();
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
@@ -93,9 +113,7 @@ public class ListagemInsumosActivity extends AppCompatActivity {
         bttAddInsumo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(ListagemInsumosActivity.this, InsumosActivity.class);
-                startActivity(it);
-                finish();
+                mSheetLayout.expandFab();
             }
         });
         

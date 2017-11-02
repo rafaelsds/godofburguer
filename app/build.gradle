@@ -1,5 +1,13 @@
 apply plugin: 'com.android.application'
 
+repositories {
+    mavenCentral()
+
+    maven {
+        url "https://jitpack.io"
+    }
+}
+
 android {
     compileSdkVersion 25
     buildToolsVersion "26.0.1"
@@ -33,6 +41,8 @@ dependencies {
 
     compile'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+
+    compile 'com.github.coyarzun89:fabtransitionactivity:0.2.0'
 
     testCompile 'junit:junit:4.12'
 }

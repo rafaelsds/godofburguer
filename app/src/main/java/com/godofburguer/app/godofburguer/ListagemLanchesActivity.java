@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.fabtransitionactivity.SheetLayout;
 import com.godofburguer.app.godofburguer.controller.InsumosController;
 import com.godofburguer.app.godofburguer.controller.LanchesController;
 import com.godofburguer.app.godofburguer.controller.RootController;
@@ -44,11 +45,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Rafael Silva
  */
 
-public class ListagemLanchesActivity extends AppCompatActivity {
+public class ListagemLanchesActivity extends AppCompatActivity implements SheetLayout.OnFabAnimationEndListener{
 
     private RecyclerView recyclerView;
     private FloatingActionButton bttAddLanche;
+    private SheetLayout mSheetLayout;
     private String excluirLanche;
+
+    private static final int REQUEST_CODE = 1;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +70,27 @@ public class ListagemLanchesActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerViewLanches);
         bttAddLanche = (FloatingActionButton)findViewById(R.id.bttAddLanche);
+        mSheetLayout = (SheetLayout)findViewById(R.id.bottom_sheet_lanches);
+        mSheetLayout.setFab(bttAddLanche);
+        mSheetLayout.setFabAnimationEndListener(this);
     }
+
+
+    @Override
+    public void onFabAnimationEnd() {
+        Intent intent = new Intent(this, LanchesActivity.class);
+        startActivityForResult(intent, REQUEST_CODE);
+        finish();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE){
+            mSheetLayout.contractFab();
+        }
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
@@ -90,9 +114,7 @@ public class ListagemLanchesActivity extends AppCompatActivity {
         bttAddLanche.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(ListagemLanchesActivity.this, LanchesActivity.class);
-                startActivity(it);
-                finish();
+                mSheetLayout.expandFab();
             }
         });
     }

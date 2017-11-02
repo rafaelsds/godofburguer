@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.fabtransitionactivity.SheetLayout;
 import com.godofburguer.app.godofburguer.controller.FornecedoresController;
 import com.godofburguer.app.godofburguer.controller.LanchesController;
 import com.godofburguer.app.godofburguer.controller.RootController;
@@ -45,13 +46,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Rafael Silva
  */
 
-public class ListagemFornecedoresActivity extends AppCompatActivity{
+public class ListagemFornecedoresActivity extends AppCompatActivity implements SheetLayout.OnFabAnimationEndListener{
 
     private RecyclerView recyclerView;
     private FloatingActionButton bttAddFornecedor;
+    private SheetLayout mSheetLayout;
     private String excluirFornecedor;
 
-    private AlertDialog alerta;
+    private static final int REQUEST_CODE = 1;
     
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +71,24 @@ public class ListagemFornecedoresActivity extends AppCompatActivity{
         getSupportActionBar().setHomeButtonEnabled(true);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerViewFornecedores);
         bttAddFornecedor = (FloatingActionButton)findViewById(R.id.bttAddFornecedor);
+        mSheetLayout = (SheetLayout)findViewById(R.id.bottom_sheet_fornecedores);
+        mSheetLayout.setFab(bttAddFornecedor);
+        mSheetLayout.setFabAnimationEndListener(this);
+    }
+
+    @Override
+    public void onFabAnimationEnd() {
+        Intent intent = new Intent(this, FornecedoresActivity.class);
+        startActivityForResult(intent, REQUEST_CODE);
+        finish();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE){
+            mSheetLayout.contractFab();
+        }
     }
 
     @Override
@@ -92,9 +112,7 @@ public class ListagemFornecedoresActivity extends AppCompatActivity{
         bttAddFornecedor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(ListagemFornecedoresActivity.this, FornecedoresActivity.class);
-                startActivity(it);
-                finish();
+                mSheetLayout.expandFab();
             }
         });
         

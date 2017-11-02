@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.fabtransitionactivity.SheetLayout;
 import com.godofburguer.app.godofburguer.controller.UsuariosController;
 import com.godofburguer.app.godofburguer.controller.RootController;
 import com.godofburguer.app.godofburguer.entidades.Usuarios;
@@ -43,12 +44,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Rafael Silva
  */
 
-public class ListagemUsuariosActivity extends AppCompatActivity {
+public class ListagemUsuariosActivity extends AppCompatActivity implements SheetLayout.OnFabAnimationEndListener{
 
     private FloatingActionButton bttAddUsuario;
     private String excluirUsuario;
+    private SheetLayout mSheetLayout;
     private RecyclerView recyclerView;
 
+    private static final int REQUEST_CODE = 1;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,16 +69,35 @@ public class ListagemUsuariosActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerViewUsuarios);
         bttAddUsuario = (FloatingActionButton)findViewById(R.id.bttAddUsuario);
+        mSheetLayout = (SheetLayout)findViewById(R.id.bottom_sheet_usuarios);
+        mSheetLayout.setFab(bttAddUsuario);
+        mSheetLayout.setFabAnimationEndListener(this);
     }
+
+
+    @Override
+    public void onFabAnimationEnd() {
+        Intent intent = new Intent(this, CadastroUsuarioActivity.class);
+        startActivityForResult(intent, REQUEST_CODE);
+        finish();
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE){
+            mSheetLayout.contractFab();
+        }
+    }
+
 
     public void botoes(){
 
         bttAddUsuario.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(ListagemUsuariosActivity.this, CadastroUsuarioActivity.class);
-                startActivity(it);
-                finish();
+                mSheetLayout.expandFab();
             }
 ;        });
 
