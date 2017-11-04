@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
@@ -27,6 +28,8 @@ import com.github.fabtransitionactivity.SheetLayout;
 import com.godofburguer.app.godofburguer.controller.InsumosController;
 import com.godofburguer.app.godofburguer.controller.LanchesController;
 import com.godofburguer.app.godofburguer.controller.RootController;
+import com.godofburguer.app.godofburguer.dao.Dml;
+import com.godofburguer.app.godofburguer.dao.SincronizaBancoWs;
 import com.godofburguer.app.godofburguer.entidades.Insumos;
 import com.godofburguer.app.godofburguer.entidades.Lanches;
 import com.godofburguer.app.godofburguer.entidades.Lanches;
@@ -54,6 +57,14 @@ public class ListagemLanchesActivity extends AppCompatActivity implements SheetL
 
     private static final int REQUEST_CODE = 1;
 
+    private static final String T_ID = com.godofburguer.app.godofburguer.dao.tabelas.Lanches.ID;
+    private static final String T_DESCRICAO = com.godofburguer.app.godofburguer.dao.tabelas.Lanches.DESCRICAO;
+    private static final String T_TABELA = com.godofburguer.app.godofburguer.dao.tabelas.Lanches.TABELA;
+    private static final String T_VALOR = com.godofburguer.app.godofburguer.dao.tabelas.Lanches.VALOR;
+
+    SincronizaBancoWs ws;
+    Dml crud;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listagem_lanches);
@@ -66,6 +77,9 @@ public class ListagemLanchesActivity extends AppCompatActivity implements SheetL
     }
 
     public void inicialise(){
+        ws = new SincronizaBancoWs(ListagemLanchesActivity.this);
+        crud = new Dml(ListagemLanchesActivity.this);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerViewLanches);
@@ -120,89 +134,53 @@ public class ListagemLanchesActivity extends AppCompatActivity implements SheetL
     }
 
     public void atualizar() {
-        obter(new CallBack <List<Lanches>>(){
-            @Override
-            public void call(List<Lanches> objeto) {
-                List<Lanches> list = new ArrayList<Lanches>();
+        ws.atualizarLanches();
 
-                for(Lanches r : objeto){
-                    list.add(new Lanches(r.getNome(),r.getId(),r.getValor()));
+        //Faz o select de todos os dados passando por parametros, a tabela, os campos e a ordem
+        String[] campos =  {T_ID, T_DESCRICAO, T_VALOR};
+        Cursor cursor = crud.getAll(T_TABELA, campos, T_ID+" ASC");
+
+        ArrayList<Lanches> list = new ArrayList<Lanches>();
+
+        if(cursor != null) {
+            if (cursor.moveToFirst()){
+                while (!cursor.isAfterLast()) {
+                    list.add(new Lanches(
+                            cursor.getString(cursor.getColumnIndexOrThrow(T_DESCRICAO)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(T_ID)),
+                            cursor.getFloat(cursor.getColumnIndexOrThrow(T_VALOR))));
+
+                    cursor.moveToNext();
                 }
 
-                if(list == null || list.isEmpty()){
-                    Toast.makeText(ListagemLanchesActivity.this, "Nenhum registro encontrado!", Toast.LENGTH_SHORT).show();
-                }
-
-                recyclerView.setLayoutManager(new LinearLayoutManager(ListagemLanchesActivity.this));
-                recyclerView.setAdapter(new ListagemLanchesActivity.NotesAdapter(ListagemLanchesActivity.this,list));
-
+            }else{
+                Toast.makeText(getApplicationContext(), "Nenhum Lançamento encontrado!",
+                        Toast.LENGTH_SHORT).show();
             }
+        }
 
-            @Override
-            public void call(){
-            };
-
-        });
+        recyclerView.setLayoutManager(new LinearLayoutManager(ListagemLanchesActivity.this));
+        recyclerView.setAdapter(new ListagemLanchesActivity.NotesAdapter(ListagemLanchesActivity.this,list));
 
     }
 
-    public void obter(final ListagemLanchesActivity.CallBack callback) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(RootController.URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        LanchesController controler = retrofit.create(LanchesController.class);
-
-        Call<List<Lanches>> request = controler.list();
-
-        final ProgressDialog progressDoalog;
-        progressDoalog = new ProgressDialog(ListagemLanchesActivity.this);
-        progressDoalog.setMax(100);
-        progressDoalog.setMessage("Buscando....");
-
-        progressDoalog.show();
-
-        request.enqueue(new Callback<List<Lanches>>() {
-            @Override
-            public void onResponse(Call<List<Lanches>> call, Response<List<Lanches>> response) {
-                progressDoalog.dismiss();
-                if (!response.isSuccessful()) {
-                    Toast.makeText(ListagemLanchesActivity.this, response.code(), Toast.LENGTH_SHORT).show();
-                } else {
-                    callback.call(response.body());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Lanches>> call, Throwable t) {
-                progressDoalog.dismiss();
-                Toast.makeText(ListagemLanchesActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     public interface CallBack<T>{
         public void call();
-        public void call(T callList);
     }
 
 
     public void excluir(){
 
-        excluir(new ListagemInsumosActivity.CallBack() {
+        excluir(new CallBack() {
             @Override
             public void call() {
             }
 
-            @Override
-            public void call(Object callList) {
-
-            }
         });
     }
 
-    public void excluir(final ListagemInsumosActivity.CallBack callback) {
+    public void excluir(final CallBack callback) {
 
         if(excluirLanche != null && !excluirLanche.isEmpty()){
 

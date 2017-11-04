@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
@@ -27,10 +28,13 @@ import com.github.fabtransitionactivity.SheetLayout;
 import com.godofburguer.app.godofburguer.controller.FornecedoresController;
 import com.godofburguer.app.godofburguer.controller.LanchesController;
 import com.godofburguer.app.godofburguer.controller.RootController;
+import com.godofburguer.app.godofburguer.dao.Dml;
+import com.godofburguer.app.godofburguer.dao.SincronizaBancoWs;
 import com.godofburguer.app.godofburguer.entidades.Fornecedores;
 import com.godofburguer.app.godofburguer.entidades.Fornecedores;
 import com.godofburguer.app.godofburguer.entidades.Insumos;
 import com.godofburguer.app.godofburguer.entidades.Lanches;
+import com.godofburguer.app.godofburguer.entidades.Usuarios;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,7 +58,17 @@ public class ListagemFornecedoresActivity extends AppCompatActivity implements S
     private String excluirFornecedor;
 
     private static final int REQUEST_CODE = 1;
-    
+
+    private static final String T_ID = com.godofburguer.app.godofburguer.dao.tabelas.Fornecedores.ID;
+    private static final String T_DESCRICAO = com.godofburguer.app.godofburguer.dao.tabelas.Fornecedores.DESCRICAO;
+    private static final String T_TABELA = com.godofburguer.app.godofburguer.dao.tabelas.Fornecedores.TABELA;
+    private static final String T_EMAIL = com.godofburguer.app.godofburguer.dao.tabelas.Fornecedores.EMAIL;
+    private static final String T_ENDERECO = com.godofburguer.app.godofburguer.dao.tabelas.Fornecedores.ENDERECO;
+    private static final String T_TELEFONE = com.godofburguer.app.godofburguer.dao.tabelas.Fornecedores.TELEFONE;
+
+    SincronizaBancoWs ws;
+    Dml crud;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listagem_fornecedores);
@@ -67,6 +81,9 @@ public class ListagemFornecedoresActivity extends AppCompatActivity implements S
 
 
     public void inicialise(){
+        ws = new SincronizaBancoWs(ListagemFornecedoresActivity.this);
+        crud = new Dml(ListagemFornecedoresActivity.this);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerViewFornecedores);
@@ -115,89 +132,52 @@ public class ListagemFornecedoresActivity extends AppCompatActivity implements S
                 mSheetLayout.expandFab();
             }
         });
-        
+
     }
 
     public void atualizar() {
-        obter(new ListagemFornecedoresActivity.CallBack<List<Fornecedores>>(){
-            @Override
-            public void call(List<Fornecedores> objeto) {
-                List<Fornecedores> list = new ArrayList<Fornecedores>();
+        ws.atualizarFornecedores();
 
-                for(Fornecedores r : objeto){
-                    list.add(new Fornecedores(r.getNome(),r.getEndereco(), r.getTelefone(),r.getEmail(),r.getId()));
+        //Faz o select de todos os dados passando por parametros, a tabela, os campos e a ordem
+        String[] campos =  {T_ID, T_DESCRICAO, T_EMAIL, T_ENDERECO, T_TELEFONE};
+        Cursor cursor = crud.getAll(T_TABELA, campos, T_ID+" ASC");
+
+        ArrayList<Fornecedores> list = new ArrayList<Fornecedores>();
+
+        if(cursor != null) {
+            if (cursor.moveToFirst()){
+                while (!cursor.isAfterLast()) {
+                    list.add(new Fornecedores(
+                            cursor.getString(cursor.getColumnIndexOrThrow(T_DESCRICAO)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(T_ENDERECO)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(T_TELEFONE)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(T_EMAIL)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(T_ID))));
+
+                    cursor.moveToNext();
                 }
 
-                if(list == null || list.isEmpty()){
-                    Toast.makeText(ListagemFornecedoresActivity.this, "Nenhum registro encontrado!", Toast.LENGTH_SHORT).show();
-                }
-
-                recyclerView.setLayoutManager(new LinearLayoutManager(ListagemFornecedoresActivity.this));
-                recyclerView.setAdapter(new ListagemFornecedoresActivity.NotesAdapter(ListagemFornecedoresActivity.this,list));
-
-
+            }else{
+                Toast.makeText(getApplicationContext(), "Nenhum Lançamento encontrado!",
+                        Toast.LENGTH_SHORT).show();
             }
+        }
 
-            @Override
-            public void call(){
-            };
+        recyclerView.setLayoutManager(new LinearLayoutManager(ListagemFornecedoresActivity.this));
+        recyclerView.setAdapter(new ListagemFornecedoresActivity.NotesAdapter(ListagemFornecedoresActivity.this,list));
 
-        });
 
-    }
-
-    public void obter(final ListagemFornecedoresActivity.CallBack callback) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(RootController.URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        FornecedoresController controler = retrofit.create(FornecedoresController.class);
-
-        Call<List<Fornecedores>> request = controler.list();
-
-        final ProgressDialog progressDoalog;
-        progressDoalog = new ProgressDialog(ListagemFornecedoresActivity.this);
-        progressDoalog.setMax(100);
-        progressDoalog.setMessage("Buscando....");
-
-        progressDoalog.show();
-
-        request.enqueue(new Callback<List<Fornecedores>>() {
-            @Override
-            public void onResponse(Call<List<Fornecedores>> call, Response<List<Fornecedores>> response) {
-                progressDoalog.dismiss();
-                if (!response.isSuccessful()) {
-                    Toast.makeText(ListagemFornecedoresActivity.this, response.code(), Toast.LENGTH_SHORT).show();
-                } else {
-                    callback.call(response.body());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Fornecedores>> call, Throwable t) {
-                progressDoalog.dismiss();
-                Toast.makeText(ListagemFornecedoresActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     public interface CallBack<T>{
         public void call();
-        public void call(T callList);
     }
-
 
     public void excluir(){
 
         excluir(new ListagemFornecedoresActivity.CallBack() {
             @Override
             public void call() {
-            }
-
-            @Override
-            public void call(Object callList) {
-
             }
         });
     }

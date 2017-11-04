@@ -135,7 +135,7 @@ public class InsumosActivity extends AppCompatActivity {
 
         final ProgressDialog progressDoalog;
         progressDoalog = new ProgressDialog(InsumosActivity.this);
-        progressDoalog.setMax(100);
+        progressDoalog.setMax(300);
         progressDoalog.setMessage("carregando....");
         progressDoalog.show();
 
@@ -150,11 +150,12 @@ public class InsumosActivity extends AppCompatActivity {
             request.enqueue(new Callback<Boolean>() {
                 @Override
                 public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                    progressDoalog.dismiss();
+
                     if (!response.isSuccessful()) {
                         Toast.makeText(InsumosActivity.this, response.code(), Toast.LENGTH_SHORT).show();
                     } else {
-                        callback.call();
+                        //callback.call();
+                        progressDoalog.dismiss();
                         Intent it = new Intent(InsumosActivity.this, ListagemInsumosActivity.class);
                         startActivity(it);
                         finish();

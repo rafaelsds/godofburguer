@@ -27,6 +27,8 @@ import android.widget.Toast;
 import com.github.fabtransitionactivity.SheetLayout;
 import com.godofburguer.app.godofburguer.controller.UsuariosController;
 import com.godofburguer.app.godofburguer.controller.RootController;
+import com.godofburguer.app.godofburguer.dao.Dml;
+import com.godofburguer.app.godofburguer.dao.SincronizaBancoWs;
 import com.godofburguer.app.godofburguer.entidades.Usuarios;
 
 import java.text.SimpleDateFormat;
@@ -53,6 +55,18 @@ public class ListagemUsuariosActivity extends AppCompatActivity implements Sheet
 
     private static final int REQUEST_CODE = 1;
 
+    private static final String T_ID = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.ID;
+    private static final String T_DESCRICAO = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.DESCRICAO;
+    private static final String T_TABELA = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.TABELA;
+    private static final String T_EMAIL = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.EMAIL;
+    private static final String T_ENDERECO = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.ENDERECO;
+    private static final String T_LOGIN = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.LOGIN;
+    private static final String T_SENHA = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.SENHA;
+    private static final String T_TELEFONE = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.TELEFONE;
+
+    SincronizaBancoWs ws;
+    Dml crud;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listagem_usuarios);
@@ -65,6 +79,9 @@ public class ListagemUsuariosActivity extends AppCompatActivity implements Sheet
 
 
     public void inicialise(){
+        ws = new SincronizaBancoWs(ListagemUsuariosActivity.this);
+        crud = new Dml(ListagemUsuariosActivity.this);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerViewUsuarios);
@@ -120,84 +137,50 @@ public class ListagemUsuariosActivity extends AppCompatActivity implements Sheet
     }
 
     public void atualizar() {
-        obter(new ListagemUsuariosActivity.CallBack<List<Usuarios>>(){
-            @Override
-            public void call(List<Usuarios> objeto) {
-                List<Usuarios> list = new ArrayList<Usuarios>();
 
-                for(Usuarios r : objeto){
-                    list.add(new Usuarios(r.getNome(),r.getEndereco(),r.getTelefone(),r.getEmail(),r.getLogin(),r.getSenha(),r.getId()));
+        ws.atualizarUsuarios();
+
+        //Faz o select de todos os dados passando por parametros, a tabela, os campos e a ordem
+        String[] campos =  {T_ID, T_DESCRICAO, T_EMAIL, T_ENDERECO, T_LOGIN, T_SENHA, T_TELEFONE};
+        Cursor cursor = crud.getAll(T_TABELA, campos, T_ID+" ASC");
+
+        ArrayList<Usuarios> list = new ArrayList<Usuarios>();
+
+        if(cursor != null) {
+            if (cursor.moveToFirst()){
+                while (!cursor.isAfterLast()) {
+                    list.add(new Usuarios(
+                            cursor.getString(cursor.getColumnIndexOrThrow(T_DESCRICAO)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(T_ENDERECO)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(T_TELEFONE)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(T_EMAIL)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(T_LOGIN)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(T_SENHA)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(T_ID))));
+
+                    cursor.moveToNext();
                 }
 
-                if(list == null || list.isEmpty()){
-                    Toast.makeText(ListagemUsuariosActivity.this, "Nenhum registro encontrado!", Toast.LENGTH_SHORT).show();
-                }
-
-                recyclerView.setLayoutManager(new LinearLayoutManager(ListagemUsuariosActivity.this));
-                recyclerView.setAdapter(new NotesAdapter(ListagemUsuariosActivity.this,list));
-
+            }else{
+                Toast.makeText(getApplicationContext(), "Nenhum Lançamento encontrado!",
+                        Toast.LENGTH_SHORT).show();
             }
+        }
 
-            @Override
-            public void call(){
-            };
+        recyclerView.setLayoutManager(new LinearLayoutManager(ListagemUsuariosActivity.this));
+        recyclerView.setAdapter(new NotesAdapter(ListagemUsuariosActivity.this,list));
 
-        });
-
-    }
-
-    public void obter(final ListagemUsuariosActivity.CallBack callback) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(RootController.URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        UsuariosController controler = retrofit.create(UsuariosController.class);
-
-        Call<List<Usuarios>> request = controler.list();
-
-        final ProgressDialog progressDoalog;
-        progressDoalog = new ProgressDialog(ListagemUsuariosActivity.this);
-        progressDoalog.setMax(100);
-        progressDoalog.setMessage("Buscando....");
-
-        progressDoalog.show();
-
-        request.enqueue(new Callback<List<Usuarios>>() {
-            @Override
-            public void onResponse(Call<List<Usuarios>> call, Response<List<Usuarios>> response) {
-                progressDoalog.dismiss();
-                if (!response.isSuccessful()) {
-                    Toast.makeText(ListagemUsuariosActivity.this, response.code(), Toast.LENGTH_SHORT).show();
-                } else {
-                    callback.call(response.body());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Usuarios>> call, Throwable t) {
-                progressDoalog.dismiss();
-                Toast.makeText(ListagemUsuariosActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     public interface CallBack<T>{
         public void call();
-        public void call(T callList);
     }
-
 
     public void excluir(){
 
         excluir(new ListagemUsuariosActivity.CallBack() {
             @Override
             public void call() {
-            }
-
-            @Override
-            public void call(Object callList) {
-
             }
         });
     }

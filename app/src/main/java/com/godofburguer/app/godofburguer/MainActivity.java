@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.godofburguer.app.godofburguer.dao.SincronizaBancoWs;
 import com.godofburguer.app.godofburguer.entidades.Indicador;
 
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //SincronizaBancoWs sincronizaBancoWs = new SincronizaBancoWs(getBaseContext());
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -63,6 +66,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    //Menu lateral de opções
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        // Inflate the menu; this adds items to the action bar if it is present.

@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
@@ -17,16 +18,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.fabtransitionactivity.SheetLayout;
 import com.godofburguer.app.godofburguer.controller.InsumosController;
 import com.godofburguer.app.godofburguer.controller.RootController;
-import com.godofburguer.app.godofburguer.entidades.Insumos;
+import com.godofburguer.app.godofburguer.dao.Dml;
+import com.godofburguer.app.godofburguer.dao.SincronizaBancoWs;
 import com.godofburguer.app.godofburguer.entidades.Insumos;
 
 import java.util.ArrayList;
@@ -51,8 +50,12 @@ public class ListagemInsumosActivity extends AppCompatActivity implements SheetL
     private String insumoExcluir;
 
     private static final int REQUEST_CODE = 1;
+    private static final String T_ID = com.godofburguer.app.godofburguer.dao.tabelas.Insumos.ID;
+    private static final String T_DESCRICAO = com.godofburguer.app.godofburguer.dao.tabelas.Insumos.DESCRICAO;
+    private static final String T_TABELA = com.godofburguer.app.godofburguer.dao.tabelas.Insumos.TABELA;
 
-    List<Insumos>listInsumos = new ArrayList<Insumos>();
+    SincronizaBancoWs ws;
+    Dml crud;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +70,9 @@ public class ListagemInsumosActivity extends AppCompatActivity implements SheetL
 
 
     public void inicialise(){
+        ws = new SincronizaBancoWs(ListagemInsumosActivity.this);
+        crud = new Dml(ListagemInsumosActivity.this);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerViewInsumos);
@@ -121,90 +127,41 @@ public class ListagemInsumosActivity extends AppCompatActivity implements SheetL
 
     public interface CallBack<T>{
         public void call();
-        public void call(T callList);
     }
     
     
-    public void atualizaInsumos() {
-        obterInsumos(new CallBack <List<Insumos>>(){
-            @Override
-            public void call(List<Insumos> objeto) {
-                List<Insumos> list = new ArrayList<Insumos>();
+    public void atualizaInsumos(){
+        ws.atualizarInsumos();
 
-                for(Insumos r : objeto){
-                    list.add(new Insumos(r.getNome(),r.getId()));
+        //Faz o select de todos os dados passando por parametros, a tabela, os campos e a ordem
+        String[] campos =  {T_ID, T_DESCRICAO};
+        Cursor cursor = crud.getAll(T_TABELA, campos, T_ID+" ASC");
+
+        ArrayList<Insumos> list = new ArrayList<Insumos>();
+
+        if(cursor != null) {
+            if (cursor.moveToFirst()){
+                while (!cursor.isAfterLast()) {
+                    list.add(new Insumos(
+                            cursor.getString(cursor.getColumnIndexOrThrow(T_DESCRICAO)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(T_ID))));
+
+                    cursor.moveToNext();
                 }
 
-                recyclerView.setLayoutManager(new LinearLayoutManager(ListagemInsumosActivity.this));
-                recyclerView.setAdapter(new ListagemInsumosActivity.NotesAdapter(ListagemInsumosActivity.this,list));
-
+            }else{
+                Toast.makeText(getApplicationContext(), "Nenhum Lançamento encontrado!",
+                        Toast.LENGTH_SHORT).show();
             }
+        }
 
-            @Override
-            public void call(){
-            };
+        recyclerView.setLayoutManager(new LinearLayoutManager(ListagemInsumosActivity.this));
+        recyclerView.setAdapter(new ListagemInsumosActivity.NotesAdapter(ListagemInsumosActivity.this,list));
 
-        });
     }
 
-
-    public void obterInsumos(final CallBack callback) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(RootController.URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        InsumosController controler = retrofit.create(InsumosController.class);
-
-
-        Call<List<Insumos>> request = controler.list();
-
-
-        final ProgressDialog progressDoalog;
-        progressDoalog = new ProgressDialog(ListagemInsumosActivity.this);
-        progressDoalog.setMax(100);
-        progressDoalog.setMessage("Buscando Insumos....");
-
-        progressDoalog.show();
-
-
-        request.enqueue(new Callback<List<Insumos>>() {
-            @Override
-            public void onResponse(Call<List<Insumos>> call, Response<List<Insumos>> response) {
-                progressDoalog.dismiss();
-                if (!response.isSuccessful()) {
-                    Toast.makeText(ListagemInsumosActivity.this, response.code(), Toast.LENGTH_SHORT).show();
-                } else {
-                    callback.call(response.body());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Insumos>> call, Throwable t) {
-                progressDoalog.dismiss();
-                Toast.makeText(ListagemInsumosActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-
-    public void excluirInsumo(){
-
-        excluirInsumo(new CallBack() {
-            @Override
-            public void call() {
-            }
-
-            @Override
-            public void call(Object callList) {
-
-            }
-        });
-    }
 
     public void excluirInsumo(final CallBack callback) {
-
-
         if(insumoExcluir != null && !insumoExcluir.isEmpty()){
 
             Retrofit retrofit = new Retrofit.Builder()
@@ -222,20 +179,20 @@ public class ListagemInsumosActivity extends AppCompatActivity implements SheetL
 
             final ProgressDialog progressDoalog;
             progressDoalog = new ProgressDialog(ListagemInsumosActivity.this);
-            progressDoalog.setMax(100);
+            progressDoalog.setMax(200);
             progressDoalog.setMessage("Excluindo Insumo....");
             progressDoalog.show();
 
             request.enqueue(new Callback<Boolean>() {
                 @Override
                 public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                    progressDoalog.dismiss();
+
                     if (!response.isSuccessful()) {
                         Toast.makeText(ListagemInsumosActivity.this, response.code(), Toast.LENGTH_SHORT).show();
                     } else {
-                        callback.call();
                         insumoExcluir="";
                         atualizaInsumos();
+                        progressDoalog.dismiss();
                     }
                 }
 
@@ -328,7 +285,13 @@ public class ListagemInsumosActivity extends AppCompatActivity implements SheetL
             builder.setNegativeButton("Excluir", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface arg0, int arg1) {
                     insumoExcluir = u.getId();
-                    excluirInsumo();
+
+                    excluirInsumo(new CallBack() {
+                        @Override
+                        public void call() {
+                        }
+                    });
+
                 }
             });
 
