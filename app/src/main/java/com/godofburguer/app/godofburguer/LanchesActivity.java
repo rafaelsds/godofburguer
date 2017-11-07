@@ -17,6 +17,7 @@ import com.godofburguer.app.godofburguer.entidades.Lanches;
 
 import java.util.HashMap;
 
+import dmax.dialog.SpotsDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -75,7 +76,6 @@ public class LanchesActivity extends AppCompatActivity {
         Intent myIntent = new Intent(getApplicationContext(), ListagemLanchesActivity.class);
         startActivityForResult(myIntent, 0);
         finish();
-        return;
     }
 
 
@@ -104,7 +104,7 @@ public class LanchesActivity extends AppCompatActivity {
     }
 
     public interface CallBack{
-        public void call();
+        void call();
     }
 
     public boolean validaDados(String descricao, String valor) {
@@ -141,10 +141,7 @@ public class LanchesActivity extends AppCompatActivity {
 
         HashMap<String, String> param = obterHashUsuario();
 
-        final ProgressDialog progressDoalog;
-        progressDoalog = new ProgressDialog(LanchesActivity.this);
-        progressDoalog.setMax(100);
-        progressDoalog.setMessage("Carregando....");
+        final android.app.AlertDialog progressDoalog = new SpotsDialog(this, R.style.ProgressDialogCustom);
         progressDoalog.show();
 
         if(idLanche != null){
@@ -204,7 +201,7 @@ public class LanchesActivity extends AppCompatActivity {
 
     public HashMap<String, String> obterHashUsuario(){
 
-        HashMap<String, String> hashMap = new HashMap<String, String>();
+        HashMap<String, String> hashMap = new HashMap<>();
 
         hashMap.put("nome", edtDescricao.getText().toString());
         hashMap.put("valor", edtValor.getText().toString());
@@ -221,7 +218,7 @@ public class LanchesActivity extends AppCompatActivity {
         if(u.getNome() != null)
             edtDescricao.setText(u.getNome());
 
-        if(String.valueOf(u.getValor()) != null)
+        if(!String.valueOf(u.getValor()).isEmpty())
             edtValor.setText(String.valueOf(u.getValor()));
 
     }

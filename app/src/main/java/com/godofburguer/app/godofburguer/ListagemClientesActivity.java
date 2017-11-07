@@ -2,10 +2,12 @@ package com.godofburguer.app.godofburguer;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
@@ -37,6 +39,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dmax.dialog.SpotsDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -56,16 +59,6 @@ public class ListagemClientesActivity extends AppCompatActivity implements Sheet
 
     private static final int REQUEST_CODE = 1;
 
-    private static final String T_ID = com.godofburguer.app.godofburguer.dao.tabelas.Clientes.ID;
-    private static final String T_DESCRICAO = com.godofburguer.app.godofburguer.dao.tabelas.Clientes.DESCRICAO;
-    private static final String T_TABELA = com.godofburguer.app.godofburguer.dao.tabelas.Clientes.TABELA;
-    private static final String T_EMAIL = com.godofburguer.app.godofburguer.dao.tabelas.Clientes.EMAIL;
-    private static final String T_ENDERECO = com.godofburguer.app.godofburguer.dao.tabelas.Clientes.ENDERECO;
-    private static final String T_TELEFONE = com.godofburguer.app.godofburguer.dao.tabelas.Clientes.TELEFONE;
-
-    SincronizaBancoWs ws;
-    Dml crud;
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listagem_clientes);
@@ -78,9 +71,6 @@ public class ListagemClientesActivity extends AppCompatActivity implements Sheet
 
 
     public void inicialise(){
-        ws = new SincronizaBancoWs(ListagemClientesActivity.this);
-        crud = new Dml(ListagemClientesActivity.this);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerViewClientes);
@@ -120,7 +110,6 @@ public class ListagemClientesActivity extends AppCompatActivity implements Sheet
         Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
         startActivityForResult(myIntent, 0);
         finish();
-        return;
     }
 
     public void botoes(){
@@ -130,51 +119,29 @@ public class ListagemClientesActivity extends AppCompatActivity implements Sheet
             public void onClick(View v) {
                 mSheetLayout.expandFab();
             }
-;        });
-        
+        });
+
     }
+
 
 
     public void atualizar() {
-        ws.atualizarClientes();
-
-        //Faz o select de todos os dados passando por parametros, a tabela, os campos e a ordem
-        String[] campos =  {T_ID, T_DESCRICAO, T_EMAIL, T_ENDERECO, T_TELEFONE};
-        Cursor cursor = crud.getAll(T_TABELA, campos, T_ID+" ASC");
-
-        ArrayList<Clientes> list = new ArrayList<Clientes>();
-
-        if(cursor != null) {
-            if (cursor.moveToFirst()){
-                while (!cursor.isAfterLast()) {
-                    list.add(new Clientes(
-                            cursor.getString(cursor.getColumnIndexOrThrow(T_DESCRICAO)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(T_ENDERECO)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(T_TELEFONE)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(T_EMAIL)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(T_ID))));
-
-                    cursor.moveToNext();
-                }
-
-            }else{
-                Toast.makeText(getApplicationContext(), "Nenhum Lançamento encontrado!",
-                        Toast.LENGTH_SHORT).show();
+        SincronizaBancoWs.atualizarClientes(new SincronizaBancoWs.CallBack<List<Clientes>>(){
+            @Override
+            public void call(List<Clientes> objeto){
+                recyclerView.setLayoutManager(new LinearLayoutManager(ListagemClientesActivity.this));
+                recyclerView.setAdapter(new ListagemClientesActivity.NotesAdapter(ListagemClientesActivity.this,objeto));
             }
-        }
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(ListagemClientesActivity.this));
-        recyclerView.setAdapter(new ListagemClientesActivity.NotesAdapter(ListagemClientesActivity.this,list));
-
+        }, ListagemClientesActivity.this);
     }
 
+
     public interface CallBack<T>{
-        public void call();
+        void call();
     }
 
 
     public void excluir(){
-
         excluir(new ListagemClientesActivity.CallBack() {
             @Override
             public void call() {
@@ -193,28 +160,27 @@ public class ListagemClientesActivity extends AppCompatActivity implements Sheet
 
             ClientesController controler = retrofit.create(ClientesController.class);
 
-            HashMap<String, String> param = new HashMap<String, String>();
+            HashMap<String, String> param = new HashMap<>();
 
             param.put("id", excluirCliente);
 
             Call<Boolean> request = controler.excluir(param);
 
-            final ProgressDialog progressDoalog;
-            progressDoalog = new ProgressDialog(ListagemClientesActivity.this);
-            progressDoalog.setMax(100);
-            progressDoalog.setMessage("Excluindo....");
+            final android.app.AlertDialog progressDoalog = new SpotsDialog(this, R.style.ProgressDialogCustom);
+
             progressDoalog.show();
 
             request.enqueue(new Callback<Boolean>() {
                 @Override
                 public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                    progressDoalog.dismiss();
+
                     if (!response.isSuccessful()) {
                         Toast.makeText(ListagemClientesActivity.this, response.code(), Toast.LENGTH_SHORT).show();
                     } else {
-                        callback.call();
                         excluirCliente="";
                         atualizar();
+                        callback.call();
+                        progressDoalog.dismiss();
                     }
                 }
 

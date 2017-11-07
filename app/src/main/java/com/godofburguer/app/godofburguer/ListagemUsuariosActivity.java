@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dmax.dialog.SpotsDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,18 +56,6 @@ public class ListagemUsuariosActivity extends AppCompatActivity implements Sheet
 
     private static final int REQUEST_CODE = 1;
 
-    private static final String T_ID = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.ID;
-    private static final String T_DESCRICAO = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.DESCRICAO;
-    private static final String T_TABELA = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.TABELA;
-    private static final String T_EMAIL = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.EMAIL;
-    private static final String T_ENDERECO = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.ENDERECO;
-    private static final String T_LOGIN = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.LOGIN;
-    private static final String T_SENHA = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.SENHA;
-    private static final String T_TELEFONE = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.TELEFONE;
-
-    SincronizaBancoWs ws;
-    Dml crud;
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listagem_usuarios);
@@ -79,9 +68,6 @@ public class ListagemUsuariosActivity extends AppCompatActivity implements Sheet
 
 
     public void inicialise(){
-        ws = new SincronizaBancoWs(ListagemUsuariosActivity.this);
-        crud = new Dml(ListagemUsuariosActivity.this);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerViewUsuarios);
@@ -116,7 +102,7 @@ public class ListagemUsuariosActivity extends AppCompatActivity implements Sheet
             public void onClick(View v) {
                 mSheetLayout.expandFab();
             }
-;        });
+        });
 
     }
 
@@ -133,47 +119,20 @@ public class ListagemUsuariosActivity extends AppCompatActivity implements Sheet
         Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
         startActivityForResult(myIntent, 0);
         finish();
-        return;
     }
 
     public void atualizar() {
-
-        ws.atualizarUsuarios();
-
-        //Faz o select de todos os dados passando por parametros, a tabela, os campos e a ordem
-        String[] campos =  {T_ID, T_DESCRICAO, T_EMAIL, T_ENDERECO, T_LOGIN, T_SENHA, T_TELEFONE};
-        Cursor cursor = crud.getAll(T_TABELA, campos, T_ID+" ASC");
-
-        ArrayList<Usuarios> list = new ArrayList<Usuarios>();
-
-        if(cursor != null) {
-            if (cursor.moveToFirst()){
-                while (!cursor.isAfterLast()) {
-                    list.add(new Usuarios(
-                            cursor.getString(cursor.getColumnIndexOrThrow(T_DESCRICAO)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(T_ENDERECO)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(T_TELEFONE)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(T_EMAIL)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(T_LOGIN)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(T_SENHA)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(T_ID))));
-
-                    cursor.moveToNext();
-                }
-
-            }else{
-                Toast.makeText(getApplicationContext(), "Nenhum Lançamento encontrado!",
-                        Toast.LENGTH_SHORT).show();
+        SincronizaBancoWs.atualizarUsuarios(new SincronizaBancoWs.CallBack<List<Usuarios>>(){
+            @Override
+            public void call(List<Usuarios> objeto){
+                recyclerView.setLayoutManager(new LinearLayoutManager(ListagemUsuariosActivity.this));
+                recyclerView.setAdapter(new NotesAdapter(ListagemUsuariosActivity.this,objeto));
             }
-        }
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(ListagemUsuariosActivity.this));
-        recyclerView.setAdapter(new NotesAdapter(ListagemUsuariosActivity.this,list));
-
+        }, ListagemUsuariosActivity.this);
     }
 
     public interface CallBack<T>{
-        public void call();
+        void call();
     }
 
     public void excluir(){
@@ -196,16 +155,13 @@ public class ListagemUsuariosActivity extends AppCompatActivity implements Sheet
 
             UsuariosController controler = retrofit.create(UsuariosController.class);
 
-            HashMap<String, String> param = new HashMap<String, String>();
+            HashMap<String, String> param = new HashMap<>();
 
             param.put("id", excluirUsuario);
 
             Call<Boolean> request = controler.excluir(param);
 
-            final ProgressDialog progressDoalog;
-            progressDoalog = new ProgressDialog(ListagemUsuariosActivity.this);
-            progressDoalog.setMax(100);
-            progressDoalog.setMessage("Excluindo....");
+            final android.app.AlertDialog progressDoalog = new SpotsDialog(this, R.style.ProgressDialogCustom);
             progressDoalog.show();
 
             request.enqueue(new Callback<Boolean>() {

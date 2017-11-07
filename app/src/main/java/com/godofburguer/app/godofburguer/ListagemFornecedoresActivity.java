@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dmax.dialog.SpotsDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -81,9 +82,6 @@ public class ListagemFornecedoresActivity extends AppCompatActivity implements S
 
 
     public void inicialise(){
-        ws = new SincronizaBancoWs(ListagemFornecedoresActivity.this);
-        crud = new Dml(ListagemFornecedoresActivity.this);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerViewFornecedores);
@@ -125,48 +123,22 @@ public class ListagemFornecedoresActivity extends AppCompatActivity implements S
     }
 
     public void botoes(){
-
         bttAddFornecedor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mSheetLayout.expandFab();
             }
         });
-
     }
 
     public void atualizar() {
-        ws.atualizarFornecedores();
-
-        //Faz o select de todos os dados passando por parametros, a tabela, os campos e a ordem
-        String[] campos =  {T_ID, T_DESCRICAO, T_EMAIL, T_ENDERECO, T_TELEFONE};
-        Cursor cursor = crud.getAll(T_TABELA, campos, T_ID+" ASC");
-
-        ArrayList<Fornecedores> list = new ArrayList<Fornecedores>();
-
-        if(cursor != null) {
-            if (cursor.moveToFirst()){
-                while (!cursor.isAfterLast()) {
-                    list.add(new Fornecedores(
-                            cursor.getString(cursor.getColumnIndexOrThrow(T_DESCRICAO)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(T_ENDERECO)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(T_TELEFONE)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(T_EMAIL)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(T_ID))));
-
-                    cursor.moveToNext();
-                }
-
-            }else{
-                Toast.makeText(getApplicationContext(), "Nenhum Lançamento encontrado!",
-                        Toast.LENGTH_SHORT).show();
+        SincronizaBancoWs.atualizarFornecedores(new SincronizaBancoWs.CallBack<List<Fornecedores>>(){
+            @Override
+            public void call(List<Fornecedores> objeto){
+                recyclerView.setLayoutManager(new LinearLayoutManager(ListagemFornecedoresActivity.this));
+                recyclerView.setAdapter(new ListagemFornecedoresActivity.NotesAdapter(ListagemFornecedoresActivity.this,objeto));
             }
-        }
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(ListagemFornecedoresActivity.this));
-        recyclerView.setAdapter(new ListagemFornecedoresActivity.NotesAdapter(ListagemFornecedoresActivity.this,list));
-
-
+        }, ListagemFornecedoresActivity.this);
     }
 
     public interface CallBack<T>{
@@ -199,10 +171,7 @@ public class ListagemFornecedoresActivity extends AppCompatActivity implements S
 
             Call<Boolean> request = controler.excluir(param);
 
-            final ProgressDialog progressDoalog;
-            progressDoalog = new ProgressDialog(ListagemFornecedoresActivity.this);
-            progressDoalog.setMax(100);
-            progressDoalog.setMessage("Excluindo....");
+            final android.app.AlertDialog progressDoalog = new SpotsDialog(this, R.style.ProgressDialogCustom);
             progressDoalog.show();
 
             request.enqueue(new Callback<Boolean>() {

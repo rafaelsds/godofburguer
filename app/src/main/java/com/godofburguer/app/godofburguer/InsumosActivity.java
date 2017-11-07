@@ -17,6 +17,7 @@ import com.godofburguer.app.godofburguer.entidades.Insumos;
 
 import java.util.HashMap;
 
+import dmax.dialog.SpotsDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -73,7 +74,6 @@ public class InsumosActivity extends AppCompatActivity {
         Intent myIntent = new Intent(getApplicationContext(), ListagemInsumosActivity.class);
         startActivityForResult(myIntent, 0);
         finish();
-        return;
     }
 
 
@@ -120,7 +120,7 @@ public class InsumosActivity extends AppCompatActivity {
     }
 
     public interface CallBack{
-        public void call();
+        void call();
     }
 
     public void inserirInsumo(final InsumosActivity.CallBack callback) {
@@ -133,10 +133,7 @@ public class InsumosActivity extends AppCompatActivity {
 
         HashMap<String, String> param = obterHashUsuario();
 
-        final ProgressDialog progressDoalog;
-        progressDoalog = new ProgressDialog(InsumosActivity.this);
-        progressDoalog.setMax(300);
-        progressDoalog.setMessage("carregando....");
+        final android.app.AlertDialog progressDoalog = new SpotsDialog(this, R.style.ProgressDialogCustom);
         progressDoalog.show();
 
 
@@ -201,7 +198,7 @@ public class InsumosActivity extends AppCompatActivity {
 
     public HashMap<String, String> obterHashUsuario(){
 
-        HashMap<String, String> hashMap = new HashMap<String, String>();
+        HashMap<String, String> hashMap = new HashMap<>();
 
         hashMap.put("nome", edtDescricao.getText().toString());
 

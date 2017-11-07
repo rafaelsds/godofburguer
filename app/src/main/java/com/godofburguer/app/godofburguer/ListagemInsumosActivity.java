@@ -1,15 +1,13 @@
 package com.godofburguer.app.godofburguer;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
+import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,14 +22,13 @@ import android.widget.Toast;
 import com.github.fabtransitionactivity.SheetLayout;
 import com.godofburguer.app.godofburguer.controller.InsumosController;
 import com.godofburguer.app.godofburguer.controller.RootController;
-import com.godofburguer.app.godofburguer.dao.Dml;
 import com.godofburguer.app.godofburguer.dao.SincronizaBancoWs;
 import com.godofburguer.app.godofburguer.entidades.Insumos;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dmax.dialog.SpotsDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,12 +47,6 @@ public class ListagemInsumosActivity extends AppCompatActivity implements SheetL
     private String insumoExcluir;
 
     private static final int REQUEST_CODE = 1;
-    private static final String T_ID = com.godofburguer.app.godofburguer.dao.tabelas.Insumos.ID;
-    private static final String T_DESCRICAO = com.godofburguer.app.godofburguer.dao.tabelas.Insumos.DESCRICAO;
-    private static final String T_TABELA = com.godofburguer.app.godofburguer.dao.tabelas.Insumos.TABELA;
-
-    SincronizaBancoWs ws;
-    Dml crud;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,9 +61,6 @@ public class ListagemInsumosActivity extends AppCompatActivity implements SheetL
 
 
     public void inicialise(){
-        ws = new SincronizaBancoWs(ListagemInsumosActivity.this);
-        crud = new Dml(ListagemInsumosActivity.this);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerViewInsumos);
@@ -110,54 +98,31 @@ public class ListagemInsumosActivity extends AppCompatActivity implements SheetL
         Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
         startActivityForResult(myIntent, 0);
         finish();
-        return;
     }
 
 
     public void botoes(){
-
         bttAddInsumo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mSheetLayout.expandFab();
             }
         });
-        
     }
 
     public interface CallBack<T>{
-        public void call();
+        void call();
     }
     
     
     public void atualizaInsumos(){
-        ws.atualizarInsumos();
-
-        //Faz o select de todos os dados passando por parametros, a tabela, os campos e a ordem
-        String[] campos =  {T_ID, T_DESCRICAO};
-        Cursor cursor = crud.getAll(T_TABELA, campos, T_ID+" ASC");
-
-        ArrayList<Insumos> list = new ArrayList<Insumos>();
-
-        if(cursor != null) {
-            if (cursor.moveToFirst()){
-                while (!cursor.isAfterLast()) {
-                    list.add(new Insumos(
-                            cursor.getString(cursor.getColumnIndexOrThrow(T_DESCRICAO)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(T_ID))));
-
-                    cursor.moveToNext();
-                }
-
-            }else{
-                Toast.makeText(getApplicationContext(), "Nenhum Lançamento encontrado!",
-                        Toast.LENGTH_SHORT).show();
+        SincronizaBancoWs.atualizarInsumos(new SincronizaBancoWs.CallBack<List<Insumos>>(){
+            @Override
+            public void call(List<Insumos> objeto){
+                recyclerView.setLayoutManager(new LinearLayoutManager(ListagemInsumosActivity.this));
+                recyclerView.setAdapter(new ListagemInsumosActivity.NotesAdapter(ListagemInsumosActivity.this,objeto));
             }
-        }
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(ListagemInsumosActivity.this));
-        recyclerView.setAdapter(new ListagemInsumosActivity.NotesAdapter(ListagemInsumosActivity.this,list));
-
+        }, ListagemInsumosActivity.this);
     }
 
 
@@ -171,16 +136,13 @@ public class ListagemInsumosActivity extends AppCompatActivity implements SheetL
 
             InsumosController controler = retrofit.create(InsumosController.class);
 
-            HashMap<String, String> param = new HashMap<String, String>();
+            HashMap<String, String> param = new HashMap<>();
 
             param.put("id", insumoExcluir);
 
             Call<Boolean> request = controler.excluir_insumo(param);
 
-            final ProgressDialog progressDoalog;
-            progressDoalog = new ProgressDialog(ListagemInsumosActivity.this);
-            progressDoalog.setMax(200);
-            progressDoalog.setMessage("Excluindo Insumo....");
+            final AlertDialog progressDoalog = new SpotsDialog(ListagemInsumosActivity.this, R.style.ProgressDialogCustom);
             progressDoalog.show();
 
             request.enqueue(new Callback<Boolean>() {
@@ -207,14 +169,14 @@ public class ListagemInsumosActivity extends AppCompatActivity implements SheetL
     }
 
 
-    public class NotesAdapter extends RecyclerView.Adapter<ListagemInsumosActivity.NotesAdapter.ViewHolder> {
+    private class NotesAdapter extends RecyclerView.Adapter<ListagemInsumosActivity.NotesAdapter.ViewHolder> {
 
         private List<Insumos> mNotes;
         private Context mContext;
         AlertDialog alerta;
 
 
-        public NotesAdapter(Context context, List<Insumos> notes) {
+        private NotesAdapter(Context context, List<Insumos> notes) {
             mNotes = notes;
             mContext = context;
         }
@@ -267,7 +229,7 @@ public class ListagemInsumosActivity extends AppCompatActivity implements SheetL
         }
 
 
-        public void alerta(final Insumos u){
+        private void alerta(final Insumos u){
             AlertDialog.Builder builder = new AlertDialog.Builder(ListagemInsumosActivity.this);
 
             builder.setTitle("Cadastro de Insumos");

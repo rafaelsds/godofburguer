@@ -19,6 +19,7 @@ import com.godofburguer.app.godofburguer.entidades.Usuarios;
 import java.util.ArrayList;
 import java.util.List;
 
+import dmax.dialog.SpotsDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -121,10 +122,7 @@ public class LoginActivity extends Activity {
 
         Call<List<Usuarios>> request = controler.list();
 
-        final ProgressDialog progressDoalog;
-        progressDoalog = new ProgressDialog(LoginActivity.this);
-        progressDoalog.setMax(100);
-        progressDoalog.setMessage("Carregando....");
+        final android.app.AlertDialog progressDoalog = new SpotsDialog(this, R.style.ProgressDialogCustom);
 
         progressDoalog.show();
 
@@ -148,7 +146,7 @@ public class LoginActivity extends Activity {
     }
 
     public interface CallBack<T>{
-        public void call(T callList);
+        void call(T callList);
     }
 
 }

@@ -20,6 +20,7 @@ import com.godofburguer.app.godofburguer.entidades.Fornecedores;
 
 import java.util.HashMap;
 
+import dmax.dialog.SpotsDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,7 +68,6 @@ public class FornecedoresActivity extends AppCompatActivity {
         Intent myIntent = new Intent(getApplicationContext(), ListagemFornecedoresActivity.class);
         startActivityForResult(myIntent, 0);
         finish();
-        return;
     }
 
     public void inicialise(){
@@ -118,7 +118,7 @@ public class FornecedoresActivity extends AppCompatActivity {
     }
 
     public interface CallBack{
-        public void call();
+        void call();
     }
 
     public void inserir(){
@@ -151,7 +151,7 @@ public class FornecedoresActivity extends AppCompatActivity {
 
     public HashMap<String, String> obterHashUsuario(){
 
-        HashMap<String, String> hashMap = new HashMap<String, String>();
+        HashMap<String, String> hashMap = new HashMap<>();
 
         hashMap.put("nome", edtDescricao.getText().toString());
         hashMap.put("endereco", edtEndereco.getText().toString());
@@ -173,10 +173,7 @@ public class FornecedoresActivity extends AppCompatActivity {
 
         HashMap<String, String> param = obterHashUsuario();
 
-        final ProgressDialog progressDoalog;
-        progressDoalog = new ProgressDialog(FornecedoresActivity.this);
-        progressDoalog.setMax(100);
-        progressDoalog.setMessage("Carregando....");
+        final android.app.AlertDialog progressDoalog = new SpotsDialog(this, R.style.ProgressDialogCustom);
         progressDoalog.show();
 
 

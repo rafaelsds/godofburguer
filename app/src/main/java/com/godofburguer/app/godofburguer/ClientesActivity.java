@@ -17,6 +17,7 @@ import com.godofburguer.app.godofburguer.entidades.Clientes;
 
 import java.util.HashMap;
 
+import dmax.dialog.SpotsDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -77,7 +78,6 @@ public class ClientesActivity extends AppCompatActivity {
         Intent myIntent = new Intent(getApplicationContext(), ListagemClientesActivity.class);
         startActivityForResult(myIntent, 0);
         finish();
-        return;
     }
 
 
@@ -116,7 +116,7 @@ public class ClientesActivity extends AppCompatActivity {
     }
 
     public interface CallBack{
-        public void call();
+        void call();
     }
 
     public void inserir(){
@@ -129,7 +129,7 @@ public class ClientesActivity extends AppCompatActivity {
 
     public HashMap<String, String> obterHashUsuario(){
 
-        HashMap<String, String> hashMap = new HashMap<String, String>();
+        HashMap<String, String> hashMap = new HashMap<>();
 
         hashMap.put("nome", edtDescricao.getText().toString());
         hashMap.put("endereco", edtEndereco.getText().toString());
@@ -150,10 +150,7 @@ public class ClientesActivity extends AppCompatActivity {
 
         HashMap<String, String> param = obterHashUsuario();
 
-        final ProgressDialog progressDoalog;
-        progressDoalog = new ProgressDialog(ClientesActivity.this);
-        progressDoalog.setMax(100);
-        progressDoalog.setMessage("Inserindo....");
+        final android.app.AlertDialog progressDoalog = new SpotsDialog(this, R.style.ProgressDialogCustom);
         progressDoalog.show();
 
         if(idCliente != null) {
