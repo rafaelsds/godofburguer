@@ -15,7 +15,6 @@ public class CriaBanco extends SQLiteOpenHelper {
     private static final String NOME_BANCO = "burguerdb.db";
     private static final int VERSAO = 1;
 
-    Dml dml;
 
     public CriaBanco(Context context){
         super(context, NOME_BANCO,null,VERSAO);

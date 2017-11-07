@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 public class Insumos implements Serializable{
 
-    private String nome, id;
+    private String nome, id, fornecedor;
 
     public Insumos() {}
 
@@ -25,9 +25,18 @@ public class Insumos implements Serializable{
         this.id = id;
     }
 
-    public Insumos(String nome, String id) {
+    public Insumos(String fornecedor, String nome, String id) {
         this.nome = nome;
         this.id = id;
+        this.fornecedor = fornecedor;
+    }
+
+    public String getFornecedor() {
+        return fornecedor;
+    }
+
+    public void setFornecedor(String fornecedor) {
+        this.fornecedor = fornecedor;
     }
 
     @Override

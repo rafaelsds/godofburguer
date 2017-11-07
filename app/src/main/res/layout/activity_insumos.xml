@@ -18,7 +18,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/nome"
+            android:text="@string/descricao"
             android:textColor="@color/black"/>
 
 
@@ -28,7 +28,24 @@
             android:layout_height="wrap_content"
             android:hint="@string/informe_descricao"/>
 
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="@string/fornecedores"/>
+
+        <AutoCompleteTextView
+            android:id="@+id/atcFornecedores"
+            android:layout_marginTop="7dp"
+            android:hint="@string/escolha_fornecedor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:completionThreshold="1"/>
+
         <LinearLayout
+            android:layout_marginTop="15dp"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
@@ -49,9 +66,7 @@
                 android:text="@string/cancelar"/>
 
         </LinearLayout>
-
-
-
+        
     </LinearLayout>
 
 

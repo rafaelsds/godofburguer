@@ -37,7 +37,9 @@ public class SincronizaBancoWs {
 
         final String T_ID = com.godofburguer.app.godofburguer.dao.tabelas.Insumos.ID;
         final String T_DESCRICAO = com.godofburguer.app.godofburguer.dao.tabelas.Insumos.DESCRICAO;
+        final String T_FORNECEDOR = com.godofburguer.app.godofburguer.dao.tabelas.Insumos.FORNECEDOR;
         final String T_TABELA = com.godofburguer.app.godofburguer.dao.tabelas.Insumos.TABELA;
+
 
         final AlertDialog progressDoalog = new SpotsDialog(context, R.style.ProgressDialogCustom);
         final Dml dml = new Dml(context);
@@ -73,14 +75,15 @@ public class SincronizaBancoWs {
                         //Inclui no banco
                         ContentValues valores;
                         valores = new ContentValues();
-                        valores.put(com.godofburguer.app.godofburguer.dao.tabelas.Insumos.ID, r.getId());
-                        valores.put(com.godofburguer.app.godofburguer.dao.tabelas.Insumos.DESCRICAO, r.getNome());
+                        valores.put(T_ID, r.getId());
+                        valores.put(T_DESCRICAO, r.getNome());
+                        valores.put(T_FORNECEDOR, r.getFornecedor());
 
-                        dml.insert(com.godofburguer.app.godofburguer.dao.tabelas.Insumos.TABELA,valores);
+                        dml.insert(T_TABELA,valores);
                     }
 
                     //Faz o select de todos os dados passando por parametros, a tabela, os campos e a ordem
-                    String[] campos =  {T_ID, T_DESCRICAO};
+                    String[] campos =  {T_ID, T_DESCRICAO, T_FORNECEDOR};
                     Cursor cursor = dml.getAll(T_TABELA, campos, T_ID+" ASC");
 
                     ArrayList<Insumos> listReturn = new ArrayList<>();
@@ -89,9 +92,9 @@ public class SincronizaBancoWs {
                         if (cursor.moveToFirst()){
                             while (!cursor.isAfterLast()) {
                                 listReturn.add(new Insumos(
+                                        cursor.getString(cursor.getColumnIndexOrThrow(T_FORNECEDOR)),
                                         cursor.getString(cursor.getColumnIndexOrThrow(T_DESCRICAO)),
                                         cursor.getString(cursor.getColumnIndexOrThrow(T_ID))));
-
                                 cursor.moveToNext();
                             }
 

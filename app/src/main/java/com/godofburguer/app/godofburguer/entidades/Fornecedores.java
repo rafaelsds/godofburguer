@@ -40,11 +40,35 @@ public class Fornecedores implements Serializable{
     }
 
     public Fornecedores(String nome, String endereco, String telefone, String email, String id) {
-        this.nome = nome;
-        this.endereco = endereco;
-        this.telefone = telefone;
-        this.email = email;
-        this.id = id;
+        if(nome != null) {
+            this.nome = nome;
+        }else{
+            this.nome = "";
+        }
+
+        if(endereco != null) {
+            this.endereco = endereco;
+        }else{
+            this.endereco = "";
+        }
+
+        if(telefone != null) {
+            this.telefone = telefone;
+        }else{
+            this.telefone = "";
+        }
+
+        if(email != null) {
+            this.email = email;
+        }else{
+            this.email = "";
+        }
+
+        if(id != null) {
+            this.id = id;
+        }else{
+            this.id = "";
+        }
     }
 
     public String getId() {

@@ -43,4 +43,6 @@
     <string name="informe_senha">Informe a senha</string>
     <string name="descricao">Descrição</string>
     <string name="id">ID</string>
+    <string name="escolha_fornecedor">Escolha o fornecedor</string>
+
 </resources>
