@@ -1,14 +1,14 @@
-package com.godofburguer.app.godofburguer.dao;
+package com.godofburguer.app.godofburguer.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.godofburguer.app.godofburguer.dao.tabelas.Clientes;
-import com.godofburguer.app.godofburguer.dao.tabelas.Fornecedores;
-import com.godofburguer.app.godofburguer.dao.tabelas.Insumos;
-import com.godofburguer.app.godofburguer.dao.tabelas.Lanches;
-import com.godofburguer.app.godofburguer.dao.tabelas.Usuarios;
+import com.godofburguer.app.godofburguer.db.tabelas.Clientes;
+import com.godofburguer.app.godofburguer.db.tabelas.Fornecedores;
+import com.godofburguer.app.godofburguer.db.tabelas.Insumos;
+import com.godofburguer.app.godofburguer.db.tabelas.Lanches;
+import com.godofburguer.app.godofburguer.db.tabelas.Usuarios;
 
 public class CriaBanco extends SQLiteOpenHelper {
 

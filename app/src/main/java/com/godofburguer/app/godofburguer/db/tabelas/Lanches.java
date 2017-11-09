@@ -1,4 +1,4 @@
-package com.godofburguer.app.godofburguer.dao.tabelas;
+package com.godofburguer.app.godofburguer.db.tabelas;
 
 public class Lanches {
     public static final String TABELA = "lanches";

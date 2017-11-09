@@ -1,8 +1,7 @@
-package com.godofburguer.app.godofburguer.dao;
+package com.godofburguer.app.godofburguer.db;
 
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -35,10 +34,10 @@ public class SincronizaBancoWs {
 
     public static void atualizarInsumos(final CallBack callback, final Context context){
 
-        final String T_ID = com.godofburguer.app.godofburguer.dao.tabelas.Insumos.ID;
-        final String T_DESCRICAO = com.godofburguer.app.godofburguer.dao.tabelas.Insumos.DESCRICAO;
-        final String T_FORNECEDOR = com.godofburguer.app.godofburguer.dao.tabelas.Insumos.FORNECEDOR;
-        final String T_TABELA = com.godofburguer.app.godofburguer.dao.tabelas.Insumos.TABELA;
+        final String T_ID = com.godofburguer.app.godofburguer.db.tabelas.Insumos.ID;
+        final String T_DESCRICAO = com.godofburguer.app.godofburguer.db.tabelas.Insumos.DESCRICAO;
+        final String T_FORNECEDOR = com.godofburguer.app.godofburguer.db.tabelas.Insumos.FORNECEDOR;
+        final String T_TABELA = com.godofburguer.app.godofburguer.db.tabelas.Insumos.TABELA;
 
 
         final AlertDialog progressDoalog = new SpotsDialog(context, R.style.ProgressDialogCustom);
@@ -121,10 +120,10 @@ public class SincronizaBancoWs {
 
     public static void atualizarLanches(final CallBack callback, final Context context){
         //Obtendo os dados da tabela
-        final String T_ID = com.godofburguer.app.godofburguer.dao.tabelas.Lanches.ID;
-        final String T_DESCRICAO = com.godofburguer.app.godofburguer.dao.tabelas.Lanches.DESCRICAO;
-        final String T_TABELA = com.godofburguer.app.godofburguer.dao.tabelas.Lanches.TABELA;
-        final String T_VALOR = com.godofburguer.app.godofburguer.dao.tabelas.Lanches.VALOR;
+        final String T_ID = com.godofburguer.app.godofburguer.db.tabelas.Lanches.ID;
+        final String T_DESCRICAO = com.godofburguer.app.godofburguer.db.tabelas.Lanches.DESCRICAO;
+        final String T_TABELA = com.godofburguer.app.godofburguer.db.tabelas.Lanches.TABELA;
+        final String T_VALOR = com.godofburguer.app.godofburguer.db.tabelas.Lanches.VALOR;
 
         final AlertDialog progressDoalog = new SpotsDialog(context, R.style.ProgressDialogCustom);
         final Dml dml = new Dml(context);
@@ -203,14 +202,14 @@ public class SincronizaBancoWs {
 
     public static void atualizarUsuarios(final CallBack callback, final Context context){
         //Obtendo os dados da tabela
-        final String T_ID = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.ID;
-        final String T_DESCRICAO = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.DESCRICAO;
-        final String T_TABELA = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.TABELA;
-        final String T_EMAIL = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.EMAIL;
-        final String T_ENDERECO = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.ENDERECO;
-        final String T_LOGIN = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.LOGIN;
-        final String T_SENHA = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.SENHA;
-        final String T_TELEFONE = com.godofburguer.app.godofburguer.dao.tabelas.Usuarios.TELEFONE;
+        final String T_ID = com.godofburguer.app.godofburguer.db.tabelas.Usuarios.ID;
+        final String T_DESCRICAO = com.godofburguer.app.godofburguer.db.tabelas.Usuarios.DESCRICAO;
+        final String T_TABELA = com.godofburguer.app.godofburguer.db.tabelas.Usuarios.TABELA;
+        final String T_EMAIL = com.godofburguer.app.godofburguer.db.tabelas.Usuarios.EMAIL;
+        final String T_ENDERECO = com.godofburguer.app.godofburguer.db.tabelas.Usuarios.ENDERECO;
+        final String T_LOGIN = com.godofburguer.app.godofburguer.db.tabelas.Usuarios.LOGIN;
+        final String T_SENHA = com.godofburguer.app.godofburguer.db.tabelas.Usuarios.SENHA;
+        final String T_TELEFONE = com.godofburguer.app.godofburguer.db.tabelas.Usuarios.TELEFONE;
 
         final AlertDialog progressDoalog = new SpotsDialog(context, R.style.ProgressDialogCustom);
         final Dml dml = new Dml(context);
@@ -298,12 +297,12 @@ public class SincronizaBancoWs {
 
     public static void atualizarFornecedores(final CallBack callback, final Context context) {
         //Obtendo os dados da tabela
-        final String T_ID = com.godofburguer.app.godofburguer.dao.tabelas.Fornecedores.ID;
-        final String T_DESCRICAO = com.godofburguer.app.godofburguer.dao.tabelas.Fornecedores.DESCRICAO;
-        final String T_TABELA = com.godofburguer.app.godofburguer.dao.tabelas.Fornecedores.TABELA;
-        final String T_EMAIL = com.godofburguer.app.godofburguer.dao.tabelas.Fornecedores.EMAIL;
-        final String T_ENDERECO = com.godofburguer.app.godofburguer.dao.tabelas.Fornecedores.ENDERECO;
-        final String T_TELEFONE = com.godofburguer.app.godofburguer.dao.tabelas.Fornecedores.TELEFONE;
+        final String T_ID = com.godofburguer.app.godofburguer.db.tabelas.Fornecedores.ID;
+        final String T_DESCRICAO = com.godofburguer.app.godofburguer.db.tabelas.Fornecedores.DESCRICAO;
+        final String T_TABELA = com.godofburguer.app.godofburguer.db.tabelas.Fornecedores.TABELA;
+        final String T_EMAIL = com.godofburguer.app.godofburguer.db.tabelas.Fornecedores.EMAIL;
+        final String T_ENDERECO = com.godofburguer.app.godofburguer.db.tabelas.Fornecedores.ENDERECO;
+        final String T_TELEFONE = com.godofburguer.app.godofburguer.db.tabelas.Fornecedores.TELEFONE;
 
         final AlertDialog progressDoalog = new SpotsDialog(context, R.style.ProgressDialogCustom);
         final Dml dml = new Dml(context);
@@ -386,12 +385,12 @@ public class SincronizaBancoWs {
 
     public static void atualizarClientes(final CallBack callback, final Context context){
         //Obtendo os dados da tabela
-        final String T_ID = com.godofburguer.app.godofburguer.dao.tabelas.Clientes.ID;
-        final String T_DESCRICAO = com.godofburguer.app.godofburguer.dao.tabelas.Clientes.DESCRICAO;
-        final String T_TABELA = com.godofburguer.app.godofburguer.dao.tabelas.Clientes.TABELA;
-        final String T_EMAIL = com.godofburguer.app.godofburguer.dao.tabelas.Clientes.EMAIL;
-        final String T_ENDERECO = com.godofburguer.app.godofburguer.dao.tabelas.Clientes.ENDERECO;
-        final String T_TELEFONE = com.godofburguer.app.godofburguer.dao.tabelas.Clientes.TELEFONE;
+        final String T_ID = com.godofburguer.app.godofburguer.db.tabelas.Clientes.ID;
+        final String T_DESCRICAO = com.godofburguer.app.godofburguer.db.tabelas.Clientes.DESCRICAO;
+        final String T_TABELA = com.godofburguer.app.godofburguer.db.tabelas.Clientes.TABELA;
+        final String T_EMAIL = com.godofburguer.app.godofburguer.db.tabelas.Clientes.EMAIL;
+        final String T_ENDERECO = com.godofburguer.app.godofburguer.db.tabelas.Clientes.ENDERECO;
+        final String T_TELEFONE = com.godofburguer.app.godofburguer.db.tabelas.Clientes.TELEFONE;
 
         final AlertDialog progressDoalog = new SpotsDialog(context, R.style.ProgressDialogCustom);
         final Dml dml = new Dml(context);

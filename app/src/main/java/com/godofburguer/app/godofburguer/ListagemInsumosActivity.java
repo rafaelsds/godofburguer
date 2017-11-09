@@ -1,6 +1,5 @@
 package com.godofburguer.app.godofburguer;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,7 +21,7 @@ import android.widget.Toast;
 import com.github.fabtransitionactivity.SheetLayout;
 import com.godofburguer.app.godofburguer.controller.InsumosController;
 import com.godofburguer.app.godofburguer.controller.RootController;
-import com.godofburguer.app.godofburguer.dao.SincronizaBancoWs;
+import com.godofburguer.app.godofburguer.db.SincronizaBancoWs;
 import com.godofburguer.app.godofburguer.entidades.Insumos;
 
 import java.util.HashMap;

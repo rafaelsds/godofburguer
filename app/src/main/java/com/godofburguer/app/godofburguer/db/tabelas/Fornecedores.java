@@ -1,14 +1,14 @@
-package com.godofburguer.app.godofburguer.dao.tabelas;
+package com.godofburguer.app.godofburguer.db.tabelas;
 
-public class Clientes {
-    public static final String TABELA = "clientes";
+public class Fornecedores {
+    public static final String TABELA = "fornecedores";
     public static final String ID = "nr_sequencia";
     public static final String DESCRICAO = "descricao";
     public static final String ENDERECO = "endereco";
     public static final String TELEFONE = "telefone";
     public static final String EMAIL = "email";
 
-    public void Clientes(){
+    public void fornecedores(){
     }
 
     public static String createTable(){

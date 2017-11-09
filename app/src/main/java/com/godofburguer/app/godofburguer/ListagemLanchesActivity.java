@@ -1,11 +1,8 @@
 package com.godofburguer.app.godofburguer;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
@@ -18,23 +15,15 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.fabtransitionactivity.SheetLayout;
-import com.godofburguer.app.godofburguer.controller.InsumosController;
 import com.godofburguer.app.godofburguer.controller.LanchesController;
 import com.godofburguer.app.godofburguer.controller.RootController;
-import com.godofburguer.app.godofburguer.dao.Dml;
-import com.godofburguer.app.godofburguer.dao.SincronizaBancoWs;
-import com.godofburguer.app.godofburguer.entidades.Insumos;
-import com.godofburguer.app.godofburguer.entidades.Lanches;
+import com.godofburguer.app.godofburguer.db.SincronizaBancoWs;
 import com.godofburguer.app.godofburguer.entidades.Lanches;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 

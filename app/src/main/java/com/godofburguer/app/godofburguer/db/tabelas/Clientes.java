@@ -1,16 +1,14 @@
-package com.godofburguer.app.godofburguer.dao.tabelas;
+package com.godofburguer.app.godofburguer.db.tabelas;
 
-public class Usuarios {
-    public static final String TABELA = "usuarios";
+public class Clientes {
+    public static final String TABELA = "clientes";
     public static final String ID = "nr_sequencia";
     public static final String DESCRICAO = "descricao";
     public static final String ENDERECO = "endereco";
     public static final String TELEFONE = "telefone";
     public static final String EMAIL = "email";
-    public static final String LOGIN = "login";
-    public static final String SENHA = "senha";
 
-    public void Usuarios(){
+    public void Clientes(){
     }
 
     public static String createTable(){
@@ -19,9 +17,7 @@ public class Usuarios {
                 + DESCRICAO + " text,"
                 + ENDERECO + " text,"
                 + TELEFONE + " text,"
-                + EMAIL + " text,"
-                + LOGIN + " text,"
-                + SENHA + " text"
+                + EMAIL + " text"
                 +")";
     }
 
