@@ -8,9 +8,9 @@ import java.io.Serializable;
 
 public class Usuarios implements Serializable{
 
-    private String nome, endereco, telefone, email, login, senha, id;
+    private String nome, endereco, telefone, email, login, senha, id, tipo;
 
-    public Usuarios(String nome, String endereco, String telefone, String email, String login, String senha, String id) {
+    public Usuarios(String nome, String endereco, String telefone, String email, String login, String senha, String id, String tipo) {
         this.nome = nome;
         this.endereco = endereco;
         this.telefone = telefone;
@@ -18,6 +18,7 @@ public class Usuarios implements Serializable{
         this.login = login;
         this.senha = senha;
         this.id = id;
+        this.tipo = tipo;
     }
 
     public Usuarios(String login, String senha) {
@@ -29,6 +30,14 @@ public class Usuarios implements Serializable{
         this.nome = nome;
         this.login = login;
         this.id = id;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
     public Usuarios(String login) {

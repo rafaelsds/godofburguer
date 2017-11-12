@@ -9,6 +9,7 @@ public class Usuarios {
     public static final String EMAIL = "email";
     public static final String LOGIN = "login";
     public static final String SENHA = "senha";
+    public static final String TIPO = "tipo_usuario";
 
     public void Usuarios(){
     }
@@ -21,7 +22,8 @@ public class Usuarios {
                 + TELEFONE + " text,"
                 + EMAIL + " text,"
                 + LOGIN + " text,"
-                + SENHA + " text"
+                + SENHA + " text,"
+                + TIPO + " text"
                 +")";
     }
 

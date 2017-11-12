@@ -1,25 +1,24 @@
 package com.godofburguer.app.godofburguer;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.godofburguer.app.godofburguer.controller.ClientesController;
+
 import com.godofburguer.app.godofburguer.controller.RootController;
 import com.godofburguer.app.godofburguer.controller.UsuariosController;
-import com.godofburguer.app.godofburguer.entidades.Clientes;
+
 import com.godofburguer.app.godofburguer.entidades.Usuarios;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import dmax.dialog.SpotsDialog;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,6 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by gustavo on 05/10/17.
+ * Modify by Rafael on 25/10/2017
  */
 
 public class LoginActivity extends Activity {
@@ -35,19 +35,34 @@ public class LoginActivity extends Activity {
     private Button btnSair;
     private EditText loginEdit;
     private EditText senhaEdit;
+    private SharedPreferences.Editor editor;
+    SharedPreferences prefs;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
+        inicialise();
+        botoes();
+
+    }
+    
+    public void inicialise(){
         btnLogar = (Button) findViewById(R.id.btnLogar);
         btnSair = (Button) findViewById(R.id.btnSair);
 
         loginEdit = (EditText) findViewById(R.id.editUser);
         senhaEdit = (EditText) findViewById(R.id.editSenha);
 
-        loginEdit.setText("adm");
-        senhaEdit.setText("adm");
+        editor = getSharedPreferences("usuario", MODE_PRIVATE).edit();
+        prefs = getSharedPreferences("usuario", MODE_PRIVATE);
+
+        loginEdit.setText(prefs.getString("login",""));
+
+    }
+
+
+    public void botoes(){
 
         btnLogar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +72,6 @@ public class LoginActivity extends Activity {
                     HideSoftkeyBoard.hideSoftKeyboard(LoginActivity.this);
                     logar();
                 }
-
             }
         });
 
@@ -68,6 +82,7 @@ public class LoginActivity extends Activity {
             }
         });
     }
+
 
     public boolean validaLogin(String login, String senha) {
         Boolean isValid = true;
@@ -90,21 +105,32 @@ public class LoginActivity extends Activity {
         obter(new LoginActivity.CallBack<List<Usuarios>>(){
             @Override
             public void call(List<Usuarios> objeto) {
-                Boolean logar=false;
+                String usuarioLogar=null;
                 for(Usuarios r : objeto){
 
-                    if(loginEdit.getText().toString().trim().toUpperCase().equals(r.getLogin().toUpperCase()) && senhaEdit.getText().toString().trim().toUpperCase().equals(r.getSenha().toUpperCase())){
-                        logar=true;
+                    if(r.getTipo().equals("I") && loginEdit.getText().toString().trim().toUpperCase().equals(r.getLogin().toUpperCase()) && senhaEdit.getText().toString().trim().toUpperCase().equals(r.getSenha().toUpperCase())){
+                        usuarioLogar=r.getLogin();
                     }
 
                 }
 
-                if(logar){
+                if(usuarioLogar != null){
+                    editor.putString("login",usuarioLogar);
+                    editor.apply();
+
                     Intent i = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(i);
                     finish();
                 }else {
-                    Toast.makeText(LoginActivity.this, "Usuário e senha não conferem!", Toast.LENGTH_SHORT).show();
+
+                    new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText("Oops...")
+                            .setContentText("Usuário e senha não conferem!")
+                            .show();
+
+                    senhaEdit.setText("");
+                    senhaEdit.requestFocus();
+
                 }
 
             }
@@ -122,7 +148,10 @@ public class LoginActivity extends Activity {
 
         Call<List<Usuarios>> request = controler.list();
 
-        final android.app.AlertDialog progressDoalog = new SpotsDialog(this, R.style.ProgressDialogCustom);
+        final SweetAlertDialog progressDoalog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+        progressDoalog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        progressDoalog.setTitleText("Carregando...");
+        progressDoalog.setCancelable(false);
 
         progressDoalog.show();
 

@@ -3,6 +3,7 @@ package com.godofburguer.app.godofburguer;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -17,7 +18,7 @@ import com.godofburguer.app.godofburguer.entidades.Clientes;
 
 import java.util.HashMap;
 
-import dmax.dialog.SpotsDialog;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -150,7 +151,10 @@ public class ClientesActivity extends AppCompatActivity {
 
         HashMap<String, String> param = obterHashUsuario();
 
-        final android.app.AlertDialog progressDoalog = new SpotsDialog(this, R.style.ProgressDialogCustom);
+        final SweetAlertDialog progressDoalog = new SweetAlertDialog(ClientesActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+        progressDoalog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        progressDoalog.setTitleText("Carregando...");
+        progressDoalog.setCancelable(false);
         progressDoalog.show();
 
         if(idCliente != null) {

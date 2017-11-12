@@ -3,6 +3,7 @@ package com.godofburguer.app.godofburguer;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
@@ -24,10 +25,11 @@ import com.godofburguer.app.godofburguer.controller.RootController;
 import com.godofburguer.app.godofburguer.db.SincronizaBancoWs;
 import com.godofburguer.app.godofburguer.entidades.Usuarios;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import dmax.dialog.SpotsDialog;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -116,8 +118,15 @@ public class ListagemUsuariosActivity extends AppCompatActivity implements Sheet
         SincronizaBancoWs.atualizarUsuarios(new SincronizaBancoWs.CallBack<List<Usuarios>>(){
             @Override
             public void call(List<Usuarios> objeto){
+                List<Usuarios>list = new ArrayList<>();
+
+                for(Usuarios u : objeto){
+                    if(u.getTipo().equals("I"))
+                        list.add(u);
+                }
+
                 recyclerView.setLayoutManager(new LinearLayoutManager(ListagemUsuariosActivity.this));
-                recyclerView.setAdapter(new NotesAdapter(ListagemUsuariosActivity.this,objeto));
+                recyclerView.setAdapter(new NotesAdapter(ListagemUsuariosActivity.this,list));
             }
         }, ListagemUsuariosActivity.this);
     }
@@ -152,7 +161,10 @@ public class ListagemUsuariosActivity extends AppCompatActivity implements Sheet
 
             Call<Boolean> request = controler.excluir(param);
 
-            final android.app.AlertDialog progressDoalog = new SpotsDialog(this, R.style.ProgressDialogCustom);
+            final SweetAlertDialog progressDoalog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+            progressDoalog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+            progressDoalog.setTitleText("Carregando...");
+            progressDoalog.setCancelable(false);
             progressDoalog.show();
 
             request.enqueue(new Callback<Boolean>() {

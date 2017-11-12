@@ -3,6 +3,7 @@ package com.godofburguer.app.godofburguer;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
@@ -27,7 +28,7 @@ import com.godofburguer.app.godofburguer.entidades.Clientes;
 import java.util.HashMap;
 import java.util.List;
 
-import dmax.dialog.SpotsDialog;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -154,7 +155,10 @@ public class ListagemClientesActivity extends AppCompatActivity implements Sheet
 
             Call<Boolean> request = controler.excluir(param);
 
-            final android.app.AlertDialog progressDoalog = new SpotsDialog(this, R.style.ProgressDialogCustom);
+            final SweetAlertDialog progressDoalog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+            progressDoalog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+            progressDoalog.setTitleText("Carregando...");
+            progressDoalog.setCancelable(false);
 
             progressDoalog.show();
 

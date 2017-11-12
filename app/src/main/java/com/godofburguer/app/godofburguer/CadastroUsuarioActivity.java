@@ -3,6 +3,7 @@ package com.godofburguer.app.godofburguer;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -17,6 +18,7 @@ import com.godofburguer.app.godofburguer.entidades.Usuarios;
 
 import java.util.HashMap;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -136,7 +138,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         hashMap.put("telefone", edtTelefone.getText().toString());
         hashMap.put("login", edtLogin.getText().toString());
         hashMap.put("senha", edtSenha.getText().toString());
-
+        hashMap.put("tipo", "I");
         return hashMap;
 
     }
@@ -151,10 +153,10 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
 
         HashMap<String, String> param = obterHashUsuario();
 
-        final ProgressDialog progressDoalog;
-        progressDoalog = new ProgressDialog(CadastroUsuarioActivity.this);
-        progressDoalog.setMax(100);
-        progressDoalog.setMessage("Carregando...");
+        final SweetAlertDialog progressDoalog = new SweetAlertDialog(CadastroUsuarioActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+        progressDoalog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        progressDoalog.setTitleText("Carregando...");
+        progressDoalog.setCancelable(false);
         progressDoalog.show();
 
         if(idUusario != null) {

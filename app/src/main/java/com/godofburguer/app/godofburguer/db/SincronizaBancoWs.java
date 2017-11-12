@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.widget.Toast;
 
 import com.godofburguer.app.godofburguer.R;
@@ -23,7 +24,7 @@ import com.godofburguer.app.godofburguer.entidades.Usuarios;
 import java.util.ArrayList;
 import java.util.List;
 
-import dmax.dialog.SpotsDialog;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,7 +41,10 @@ public class SincronizaBancoWs {
         final String T_TABELA = com.godofburguer.app.godofburguer.db.tabelas.Insumos.TABELA;
 
 
-        final AlertDialog progressDoalog = new SpotsDialog(context, R.style.ProgressDialogCustom);
+        final SweetAlertDialog progressDoalog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+        progressDoalog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        progressDoalog.setTitleText("Carregando...");
+        progressDoalog.setCancelable(false);
         final Dml dml = new Dml(context);
 
         final Retrofit retrofit = new Retrofit.Builder()
@@ -125,7 +129,11 @@ public class SincronizaBancoWs {
         final String T_TABELA = com.godofburguer.app.godofburguer.db.tabelas.Lanches.TABELA;
         final String T_VALOR = com.godofburguer.app.godofburguer.db.tabelas.Lanches.VALOR;
 
-        final AlertDialog progressDoalog = new SpotsDialog(context, R.style.ProgressDialogCustom);
+        final SweetAlertDialog progressDoalog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+        progressDoalog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        progressDoalog.setTitleText("Carregando...");
+        progressDoalog.setCancelable(false);
+
         final Dml dml = new Dml(context);
 
         final Retrofit retrofit = new Retrofit.Builder()
@@ -210,8 +218,12 @@ public class SincronizaBancoWs {
         final String T_LOGIN = com.godofburguer.app.godofburguer.db.tabelas.Usuarios.LOGIN;
         final String T_SENHA = com.godofburguer.app.godofburguer.db.tabelas.Usuarios.SENHA;
         final String T_TELEFONE = com.godofburguer.app.godofburguer.db.tabelas.Usuarios.TELEFONE;
+        final String T_TIPO = com.godofburguer.app.godofburguer.db.tabelas.Usuarios.TIPO;
 
-        final AlertDialog progressDoalog = new SpotsDialog(context, R.style.ProgressDialogCustom);
+        final SweetAlertDialog progressDoalog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+        progressDoalog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        progressDoalog.setTitleText("Carregando...");
+        progressDoalog.setCancelable(false);
         final Dml dml = new Dml(context);
 
         final Retrofit retrofit = new Retrofit.Builder()
@@ -248,12 +260,13 @@ public class SincronizaBancoWs {
                         valores.put(T_LOGIN, r.getLogin());
                         valores.put(T_SENHA, r.getSenha());
                         valores.put(T_TELEFONE, r.getTelefone());
+                        valores.put(T_TIPO, r.getTipo());
 
                         dml.insert(T_TABELA,valores);
                     }
 
                     //Faz o select de todos os dados passando por parametros, a tabela, os campos e a ordem
-                    String[] campos =  {T_ID, T_DESCRICAO, T_EMAIL, T_ENDERECO, T_LOGIN, T_SENHA, T_TELEFONE};
+                    String[] campos =  {T_ID, T_DESCRICAO, T_EMAIL, T_ENDERECO, T_LOGIN, T_SENHA, T_TELEFONE, T_TIPO};
                     Cursor cursor = dml.getAll(T_TABELA, campos, T_ID+" ASC");
 
                     final ArrayList<Usuarios> listReturn = new ArrayList<>();
@@ -268,7 +281,8 @@ public class SincronizaBancoWs {
                                         cursor.getString(cursor.getColumnIndexOrThrow(T_EMAIL)),
                                         cursor.getString(cursor.getColumnIndexOrThrow(T_LOGIN)),
                                         cursor.getString(cursor.getColumnIndexOrThrow(T_SENHA)),
-                                        cursor.getString(cursor.getColumnIndexOrThrow(T_ID))));
+                                        cursor.getString(cursor.getColumnIndexOrThrow(T_ID)),
+                                        cursor.getString(cursor.getColumnIndexOrThrow(T_TIPO))));
 
                                 cursor.moveToNext();
                             }
@@ -304,7 +318,10 @@ public class SincronizaBancoWs {
         final String T_ENDERECO = com.godofburguer.app.godofburguer.db.tabelas.Fornecedores.ENDERECO;
         final String T_TELEFONE = com.godofburguer.app.godofburguer.db.tabelas.Fornecedores.TELEFONE;
 
-        final AlertDialog progressDoalog = new SpotsDialog(context, R.style.ProgressDialogCustom);
+        final SweetAlertDialog progressDoalog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+        progressDoalog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        progressDoalog.setTitleText("Carregando...");
+        progressDoalog.setCancelable(false);
         final Dml dml = new Dml(context);
 
         final Retrofit retrofit = new Retrofit.Builder()
@@ -392,7 +409,10 @@ public class SincronizaBancoWs {
         final String T_ENDERECO = com.godofburguer.app.godofburguer.db.tabelas.Clientes.ENDERECO;
         final String T_TELEFONE = com.godofburguer.app.godofburguer.db.tabelas.Clientes.TELEFONE;
 
-        final AlertDialog progressDoalog = new SpotsDialog(context, R.style.ProgressDialogCustom);
+        final SweetAlertDialog progressDoalog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+        progressDoalog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        progressDoalog.setTitleText("Carregando...");
+        progressDoalog.setCancelable(false);
         final Dml dml = new Dml(context);
 
         final Retrofit retrofit = new Retrofit.Builder()
