@@ -100,7 +100,12 @@ public class MainActivity extends AppCompatActivity
             startActivity(it);
             finish();
 
-        } else if (id == R.id.nav_clientes) {
+        } else if (id == R.id.nav_tipo_lanche) {
+            Intent it = new Intent(MainActivity.this, ListagemTipoLancheActivity.class);
+            startActivity(it);
+            finish();
+
+        }else if (id == R.id.nav_clientes) {
             Intent it = new Intent(MainActivity.this, ListagemClientesActivity.class);
             startActivity(it);
             finish();

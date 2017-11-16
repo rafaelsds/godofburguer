@@ -2,15 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_lanches"
-            android:title="@string/lanches" />
-        <item
-            android:id="@+id/nav_insumos"
-            android:title="@string/insumos" />
+
         <item
             android:id="@+id/nav_fornecedores"
             android:title="@string/fornecedores" />
+
+        <item
+            android:id="@+id/nav_insumos"
+            android:title="@string/insumos" />
+
+        <item
+            android:id="@+id/nav_tipo_lanche"
+            android:title="@string/tipo_lanche" />
+
+        <item
+            android:id="@+id/nav_lanches"
+            android:title="@string/lanches" />
+
         <item
             android:id="@+id/nav_clientes"
             android:title="Clientes" />

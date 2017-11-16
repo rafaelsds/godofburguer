@@ -44,5 +44,5 @@
     <string name="descricao">Descrição</string>
     <string name="id">ID</string>
     <string name="escolha_fornecedor">Escolha o fornecedor</string>
-
+    <string name="tipo_lanche">Tipos de Lanche</string>
 </resources>

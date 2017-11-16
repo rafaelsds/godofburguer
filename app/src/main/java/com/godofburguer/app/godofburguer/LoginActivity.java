@@ -46,7 +46,7 @@ public class LoginActivity extends Activity {
         botoes();
 
     }
-    
+
     public void inicialise(){
         btnLogar = (Button) findViewById(R.id.btnLogar);
         btnSair = (Button) findViewById(R.id.btnSair);

@@ -14,11 +14,13 @@ import com.godofburguer.app.godofburguer.controller.FornecedoresController;
 import com.godofburguer.app.godofburguer.controller.InsumosController;
 import com.godofburguer.app.godofburguer.controller.LanchesController;
 import com.godofburguer.app.godofburguer.controller.RootController;
+import com.godofburguer.app.godofburguer.controller.TipoLancheController;
 import com.godofburguer.app.godofburguer.controller.UsuariosController;
 import com.godofburguer.app.godofburguer.entidades.Clientes;
 import com.godofburguer.app.godofburguer.entidades.Fornecedores;
 import com.godofburguer.app.godofburguer.entidades.Insumos;
 import com.godofburguer.app.godofburguer.entidades.Lanches;
+import com.godofburguer.app.godofburguer.entidades.TipoLanche;
 import com.godofburguer.app.godofburguer.entidades.Usuarios;
 
 import java.util.ArrayList;
@@ -120,6 +122,91 @@ public class SincronizaBancoWs {
         });
     }
 
+
+
+    public static void atualizarTipoLanche(final CallBack callback, final Context context){
+
+        final String T_ID = com.godofburguer.app.godofburguer.db.tabelas.TipoLanche.ID;
+        final String T_DESCRICAO = com.godofburguer.app.godofburguer.db.tabelas.TipoLanche.DESCRICAO;
+        final String T_TABELA = com.godofburguer.app.godofburguer.db.tabelas.TipoLanche.TABELA;
+
+
+        final SweetAlertDialog progressDoalog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+        progressDoalog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        progressDoalog.setTitleText("Carregando...");
+        progressDoalog.setCancelable(false);
+        final Dml dml = new Dml(context);
+
+        final Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(RootController.URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        TipoLancheController controler = retrofit.create(TipoLancheController.class);
+        Call<List<TipoLanche>> request= controler.list();
+
+        progressDoalog.show();
+
+        request.enqueue(new Callback<List<TipoLanche>>() {
+            @Override
+            public void onResponse(Call<List<TipoLanche>> call, Response<List<TipoLanche>> response) {
+                progressDoalog.dismiss();
+                if (!response.isSuccessful()) {
+                    Toast.makeText(context, response.code(), Toast.LENGTH_SHORT).show();
+                } else {
+
+                    //Limpar o SQLITE para incluir os registros obtidos via ws
+                    dml.delete(T_TABELA,null);
+
+                    //Intância uma nova lista que recebe os dados do response[WS]
+                    List<TipoLanche> objeto = response.body();
+
+                    //Limpar o SQLITE para incluir os registros obtidos via ws
+                    dml.delete(T_TABELA,null);
+
+                    for(TipoLanche r : objeto){
+                        //Inclui no banco
+                        ContentValues valores;
+                        valores = new ContentValues();
+                        valores.put(T_ID, r.getId());
+                        valores.put(T_DESCRICAO, r.getNome());
+
+                        dml.insert(T_TABELA,valores);
+                    }
+
+                    //Faz o select de todos os dados passando por parametros, a tabela, os campos e a ordem
+                    String[] campos =  {T_ID, T_DESCRICAO};
+                    Cursor cursor = dml.getAll(T_TABELA, campos, T_ID+" ASC");
+
+                    ArrayList<TipoLanche> listReturn = new ArrayList<>();
+
+                    if(cursor != null) {
+                        if (cursor.moveToFirst()){
+                            while (!cursor.isAfterLast()) {
+                                listReturn.add(new TipoLanche(
+                                        cursor.getString(cursor.getColumnIndexOrThrow(T_DESCRICAO)),
+                                        cursor.getString(cursor.getColumnIndexOrThrow(T_ID))));
+                                cursor.moveToNext();
+                            }
+
+                        }else{
+                            Toast.makeText(context, "Nenhum registro encontrado!",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    progressDoalog.dismiss();
+                    callback.call(listReturn);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TipoLanche>> call, Throwable t) {
+                progressDoalog.dismiss();
+                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 
     public static void atualizarLanches(final CallBack callback, final Context context){
