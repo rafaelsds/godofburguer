@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.godofburguer.app.godofburguer.db.tabelas.Clientes;
 import com.godofburguer.app.godofburguer.db.tabelas.Fornecedores;
 import com.godofburguer.app.godofburguer.db.tabelas.Insumos;
+import com.godofburguer.app.godofburguer.db.tabelas.LancheInsumo;
 import com.godofburguer.app.godofburguer.db.tabelas.Lanches;
+import com.godofburguer.app.godofburguer.db.tabelas.TipoLanche;
 import com.godofburguer.app.godofburguer.db.tabelas.Usuarios;
 
 public class CriaBanco extends SQLiteOpenHelper {
@@ -18,6 +20,7 @@ public class CriaBanco extends SQLiteOpenHelper {
 
     public CriaBanco(Context context){
         super(context, NOME_BANCO,null,VERSAO);
+        context.deleteDatabase(NOME_BANCO);
     }
 
 
@@ -28,6 +31,8 @@ public class CriaBanco extends SQLiteOpenHelper {
         db.execSQL(Insumos.createTable());
         db.execSQL(Lanches.createTable());
         db.execSQL(Usuarios.createTable());
+        db.execSQL(TipoLanche.createTable());
+        db.execSQL(LancheInsumo.createTable());
     }
 
     @Override

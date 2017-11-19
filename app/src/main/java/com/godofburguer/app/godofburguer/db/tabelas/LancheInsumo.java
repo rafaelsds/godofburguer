@@ -1,21 +1,21 @@
 package com.godofburguer.app.godofburguer.db.tabelas;
 
-public class Lanches {
-    public static final String TABELA = "lanches";
+public class LancheInsumo {
+    public static final String TABELA = "lanche_insumo";
     public static final String ID = "nr_sequencia";
     public static final String DESCRICAO = "descricao";
-    public static final String VALOR = "vl_lanche";
-    public static final String TIPO_LANCHE = "ds_tipo_lanche";
+    public static final String ID_LANCHE = "nr_seq_lanche";
+    public static final String ID_INSUMO = "nr_seq_insumo";
 
-    public void lanches(){
+    public void LancheInsumo(){
     }
 
     public static String createTable(){
         return "CREATE TABLE "+ TABELA +"("
                 + ID + " integer primary key, "
                 + DESCRICAO + " text, "
-                + VALOR + " text, "
-                + TIPO_LANCHE + " text"
+                + ID_LANCHE + " text, "
+                + ID_INSUMO + " text"
                 +")";
     }
 

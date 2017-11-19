@@ -250,29 +250,32 @@ public class ListagemClientesActivity extends AppCompatActivity implements Sheet
 
 
         public void alerta(final Clientes u){
-            AlertDialog.Builder builder = new AlertDialog.Builder(ListagemClientesActivity.this);
 
-            builder.setTitle("Cadastro de Clientes");
-            builder.setMessage("Escolha uma opção:");
-
-            builder.setPositiveButton("Editar", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface arg0, int arg1) {
-                    Intent it = new Intent(ListagemClientesActivity.this, ClientesActivity.class);
-                    it.putExtra("cliente", u);
-                    startActivity(it);
-                    finish();
-                }
-            });
-
-            builder.setNegativeButton("Excluir", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface arg0, int arg1) {
-                    excluirCliente = u.getId();
-                    excluir();
-                }
-            });
-
-            alerta = builder.create();
-            alerta.show();
+            new SweetAlertDialog(ListagemClientesActivity.this, SweetAlertDialog.NORMAL_TYPE)
+                    .setTitleText("Cadastro de Clientes")
+                    .setContentText("Escolha uma opção")
+                    .setCancelText("Editar")
+                    .setConfirmText("Excluir")
+                    .showCancelButton(true)
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.cancel();
+                            Intent it = new Intent(ListagemClientesActivity.this, ClientesActivity.class);
+                            it.putExtra("cliente", u);
+                            startActivity(it);
+                            finish();
+                        }
+                    })
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.cancel();
+                            excluirCliente = u.getId();
+                            excluir();
+                        }
+                    })
+                    .show();
         }
 
         @Override

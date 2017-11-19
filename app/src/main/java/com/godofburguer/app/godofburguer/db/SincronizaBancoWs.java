@@ -12,6 +12,7 @@ import com.godofburguer.app.godofburguer.R;
 import com.godofburguer.app.godofburguer.controller.ClientesController;
 import com.godofburguer.app.godofburguer.controller.FornecedoresController;
 import com.godofburguer.app.godofburguer.controller.InsumosController;
+import com.godofburguer.app.godofburguer.controller.LancheInsumoController;
 import com.godofburguer.app.godofburguer.controller.LanchesController;
 import com.godofburguer.app.godofburguer.controller.RootController;
 import com.godofburguer.app.godofburguer.controller.TipoLancheController;
@@ -19,11 +20,13 @@ import com.godofburguer.app.godofburguer.controller.UsuariosController;
 import com.godofburguer.app.godofburguer.entidades.Clientes;
 import com.godofburguer.app.godofburguer.entidades.Fornecedores;
 import com.godofburguer.app.godofburguer.entidades.Insumos;
+import com.godofburguer.app.godofburguer.entidades.LancheInsumo;
 import com.godofburguer.app.godofburguer.entidades.Lanches;
 import com.godofburguer.app.godofburguer.entidades.TipoLanche;
 import com.godofburguer.app.godofburguer.entidades.Usuarios;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -73,9 +76,6 @@ public class SincronizaBancoWs {
                     //Intância uma nova lista que recebe os dados do response[WS]
                     List<Insumos> objeto = response.body();
 
-                    //Limpar o SQLITE para incluir os registros obtidos via ws
-                    dml.delete(T_TABELA,null);
-
                     for(Insumos r : objeto){
                         //Inclui no banco
                         ContentValues valores;
@@ -104,7 +104,7 @@ public class SincronizaBancoWs {
                             }
 
                         }else{
-                            Toast.makeText(context, "Nenhum registro encontrado!",
+                            Toast.makeText(context, "Nenhum insumo encontrado!",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -161,9 +161,6 @@ public class SincronizaBancoWs {
                     //Intância uma nova lista que recebe os dados do response[WS]
                     List<TipoLanche> objeto = response.body();
 
-                    //Limpar o SQLITE para incluir os registros obtidos via ws
-                    dml.delete(T_TABELA,null);
-
                     for(TipoLanche r : objeto){
                         //Inclui no banco
                         ContentValues valores;
@@ -190,7 +187,7 @@ public class SincronizaBancoWs {
                             }
 
                         }else{
-                            Toast.makeText(context, "Nenhum registro encontrado!",
+                            Toast.makeText(context, "Nenhum tipo de lanche encontrado!",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -215,6 +212,7 @@ public class SincronizaBancoWs {
         final String T_DESCRICAO = com.godofburguer.app.godofburguer.db.tabelas.Lanches.DESCRICAO;
         final String T_TABELA = com.godofburguer.app.godofburguer.db.tabelas.Lanches.TABELA;
         final String T_VALOR = com.godofburguer.app.godofburguer.db.tabelas.Lanches.VALOR;
+        final String T_TIPO_LANCHE = com.godofburguer.app.godofburguer.db.tabelas.Lanches.TIPO_LANCHE;
 
         final SweetAlertDialog progressDoalog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
         progressDoalog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
@@ -253,13 +251,14 @@ public class SincronizaBancoWs {
                         valores.put(T_ID, r.getId());
                         valores.put(T_DESCRICAO, r.getNome());
                         valores.put(T_VALOR, r.getValor());
+                        valores.put(T_TIPO_LANCHE, r.getTipoLanche());
 
                         dml.insert(T_TABELA,valores);
                     }
 
 
                     //Faz o select de todos os dados passando por parametros, a tabela, os campos e a ordem
-                    String[] campos =  {T_ID, T_DESCRICAO, T_VALOR};
+                    String[] campos =  {T_ID, T_DESCRICAO, T_VALOR, T_TIPO_LANCHE};
                     Cursor cursor = dml.getAll(T_TABELA, campos, T_ID+" ASC");
 
                     ArrayList<Lanches> listReturn = new ArrayList<>();
@@ -270,13 +269,15 @@ public class SincronizaBancoWs {
                                 listReturn.add(new Lanches(
                                         cursor.getString(cursor.getColumnIndexOrThrow(T_DESCRICAO)),
                                         cursor.getString(cursor.getColumnIndexOrThrow(T_ID)),
-                                        cursor.getFloat(cursor.getColumnIndexOrThrow(T_VALOR))));
+                                        cursor.getFloat(cursor.getColumnIndexOrThrow(T_VALOR)),
+                                        cursor.getString(cursor.getColumnIndexOrThrow(T_TIPO_LANCHE))
+                                        ));
 
                                 cursor.moveToNext();
                             }
 
                         }else{
-                            Toast.makeText(context, "Nenhum registro encontrado!",
+                            Toast.makeText(context, "Nenhum lanche encontrado!",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -375,7 +376,7 @@ public class SincronizaBancoWs {
                             }
 
                         }else{
-                            Toast.makeText(context, "Nenhum registro encontrado!",
+                            Toast.makeText(context, "Nenhum usuário encontrado!",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -467,7 +468,7 @@ public class SincronizaBancoWs {
                             }
 
                         }else{
-                            Toast.makeText(context, "Nenhum registro encontrado!",
+                            Toast.makeText(context, "Nenhum fornecedor encontrado!",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -557,7 +558,7 @@ public class SincronizaBancoWs {
                             }
                             cursor.close();
                         }else{
-                            Toast.makeText(context, "Nenhum registro encontrado!",
+                            Toast.makeText(context, "Nenhum cliente encontrado!",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -570,6 +571,90 @@ public class SincronizaBancoWs {
 
             @Override
             public void onFailure(Call<List<Clientes>> call, Throwable t) {
+                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+
+    public static void atualizarLancheInsumo(final CallBack callback, final Context context, final Lanches l){
+        final String T_ID = com.godofburguer.app.godofburguer.db.tabelas.LancheInsumo.ID;
+        final String T_DESCRICAO = com.godofburguer.app.godofburguer.db.tabelas.LancheInsumo.DESCRICAO;
+        final String T_TABELA = com.godofburguer.app.godofburguer.db.tabelas.LancheInsumo.TABELA;
+        final String T_ID_INSUMO = com.godofburguer.app.godofburguer.db.tabelas.LancheInsumo.ID_INSUMO;
+        final String T_ID_LANCHE = com.godofburguer.app.godofburguer.db.tabelas.LancheInsumo.ID_LANCHE;
+
+        final SweetAlertDialog progressDoalog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+        progressDoalog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        progressDoalog.setTitleText("Carregando...");
+        progressDoalog.setCancelable(false);
+        final Dml dml = new Dml(context);
+
+        final Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(RootController.URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+
+        LancheInsumoController controler = retrofit.create(LancheInsumoController.class);
+        Call<List<LancheInsumo>> request= controler.buscarInsumos();
+
+        progressDoalog.show();
+
+        request.enqueue(new Callback<List<LancheInsumo>>() {
+            @Override
+            public void onResponse(Call<List<LancheInsumo>> call, Response<List<LancheInsumo>> response) {
+                progressDoalog.dismiss();
+                if (!response.isSuccessful()) {
+                    Toast.makeText(context, response.code(), Toast.LENGTH_SHORT).show();
+                } else {
+                    //Limpar o SQLITE para incluir os registros obtidos via ws
+                    dml.delete(T_TABELA,null);
+
+                    //Intância uma nova lista que recebe os dados do response[WS]
+                    List<LancheInsumo> objeto = response.body();
+
+                    for(LancheInsumo r : objeto){
+                        if(r.getIdLanche().equals(l.getId())){
+                            //Inclui no banco
+                            ContentValues valores;
+                            valores = new ContentValues();
+                            valores.put(T_ID, r.getId());
+                            valores.put(T_DESCRICAO, r.getNome());
+                            valores.put(T_ID_INSUMO, r.getIdInsumo());
+                            valores.put(T_ID_LANCHE, r.getIdLanche());
+                            dml.insert(T_TABELA,valores);
+                        }
+                    }
+
+                    //Faz o select de todos os dados passando por parametros, a tabela, os campos e a ordem
+                    String[] campos =  {T_ID, T_DESCRICAO,T_ID_INSUMO, T_ID_LANCHE};
+                    Cursor cursor = dml.getAll(T_TABELA, campos, T_ID+" ASC");
+
+                    ArrayList<LancheInsumo> listReturn = new ArrayList<>();
+
+                    if(cursor != null) {
+                        if (cursor.moveToFirst()){
+                            while (!cursor.isAfterLast()) {
+                                listReturn.add(new LancheInsumo(
+                                        cursor.getString(cursor.getColumnIndexOrThrow(T_DESCRICAO)),
+                                        cursor.getString(cursor.getColumnIndexOrThrow(T_ID_LANCHE)),
+                                        cursor.getString(cursor.getColumnIndexOrThrow(T_ID_INSUMO))));
+                                cursor.moveToNext();
+                            }
+
+                        }
+                    }
+
+                    progressDoalog.dismiss();
+                    callback.call(listReturn);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<LancheInsumo>> call, Throwable t) {
+                progressDoalog.dismiss();
                 Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

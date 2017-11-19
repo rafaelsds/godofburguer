@@ -250,29 +250,31 @@ public class ListagemLanchesActivity extends AppCompatActivity implements SheetL
 
 
         public void alerta(final Lanches u){
-            AlertDialog.Builder builder = new AlertDialog.Builder(ListagemLanchesActivity.this);
-
-            builder.setTitle("Cadastro de Lanches");
-            builder.setMessage("Escolha uma opção:");
-
-            builder.setPositiveButton("Editar", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface arg0, int arg1) {
-                    Intent it = new Intent(ListagemLanchesActivity.this, LanchesActivity.class);
-                    it.putExtra("lanche", u);
-                    startActivity(it);
-                    finish();
-                }
-            });
-
-            builder.setNegativeButton("Excluir", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface arg0, int arg1) {
-                    excluirLanche = u.getId();
-                    excluir();
-                }
-            });
-
-            alerta = builder.create();
-            alerta.show();
+            new SweetAlertDialog(ListagemLanchesActivity.this, SweetAlertDialog.NORMAL_TYPE)
+                    .setTitleText("Cadastro de Lanches")
+                    .setContentText("Escolha uma opção")
+                    .setCancelText("Editar")
+                    .setConfirmText("Excluir")
+                    .showCancelButton(true)
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.cancel();
+                            Intent it = new Intent(ListagemLanchesActivity.this, LanchesActivity.class);
+                            it.putExtra("lanche", u);
+                            startActivity(it);
+                            finish();
+                        }
+                    })
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.cancel();
+                            excluirLanche = u.getId();
+                            excluir();
+                        }
+                    })
+                    .show();
         }
 
         @Override

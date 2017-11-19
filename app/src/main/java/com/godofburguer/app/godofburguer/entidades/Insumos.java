@@ -9,6 +9,12 @@ public class Insumos implements Serializable{
 
     public Insumos() {}
 
+    public Insumos(String fornecedor, String nome, String id) {
+        this.nome = nome;
+        this.id = id;
+        this.fornecedor = fornecedor;
+    }
+
     public String getNome() {
         return nome;
     }
@@ -23,12 +29,6 @@ public class Insumos implements Serializable{
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public Insumos(String fornecedor, String nome, String id) {
-        this.nome = nome;
-        this.id = id;
-        this.fornecedor = fornecedor;
     }
 
     public String getFornecedor() {

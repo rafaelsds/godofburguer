@@ -36,6 +36,7 @@
     <string name="informe_endereco">Informe o endereço</string>
     <string name="informe_telefone">Informe o telefone</string>
     <string name="informe_descricao">Informe a descrição</string>
+    <string name="informe_tipo">Informe o tipo</string>
     <string name="informe_email">Informe o email</string>
     <string name="valor">Valor</string>
     <string name="informe_valor">Informe o valor</string>
@@ -45,4 +46,5 @@
     <string name="id">ID</string>
     <string name="escolha_fornecedor">Escolha o fornecedor</string>
     <string name="tipo_lanche">Tipos de Lanche</string>
+    <string name="selecione_insumo">Informe o insumo</string>
 </resources>

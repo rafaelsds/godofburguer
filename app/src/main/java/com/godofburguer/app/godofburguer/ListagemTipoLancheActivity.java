@@ -39,7 +39,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Rafael Silva
  */
 
-public class ListagemTipoLancheActivity extends AppCompatActivity implements SheetLayout.OnFabAnimationEndListener{
+public class ListagemTipoLancheActivity extends AppCompatActivity
+        implements SheetLayout.OnFabAnimationEndListener{
 
     private RecyclerView recyclerView;
     private FloatingActionButton bttAddTipoLanche;
@@ -72,7 +73,7 @@ public class ListagemTipoLancheActivity extends AppCompatActivity implements She
 
     @Override
     public void onFabAnimationEnd() {
-        Intent intent = new Intent(this, TipoLanche.class);
+        Intent intent = new Intent(this, TipoLancheActivity.class);
         startActivityForResult(intent, REQUEST_CODE);
         finish();
     }
@@ -233,35 +234,35 @@ public class ListagemTipoLancheActivity extends AppCompatActivity implements She
 
 
         private void alerta(final TipoLanche u){
-            AlertDialog.Builder builder = new AlertDialog.Builder(ListagemTipoLancheActivity.this);
-
-            builder.setTitle("Cadastro de Tipos de Lanche");
-            builder.setMessage("Escolha uma opção:");
-
-            builder.setPositiveButton("Editar", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface arg0, int arg1) {
-                    Intent it = new Intent(ListagemTipoLancheActivity.this, InsumosActivity.class);
-                    it.putExtra("tipo_lanche", u);
-                    startActivity(it);
-                    finish();
-                }
-            });
-
-            builder.setNegativeButton("Excluir", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface arg0, int arg1) {
-                    tipoLancheExcluir = u.getId();
-
-                    excluirTipoLanche(new CallBack() {
+            new SweetAlertDialog(ListagemTipoLancheActivity.this, SweetAlertDialog.NORMAL_TYPE)
+                    .setTitleText("Cadastro de Tipos de Lanche")
+                    .setContentText("Escolha uma opção")
+                    .setCancelText("Editar")
+                    .setConfirmText("Excluir")
+                    .showCancelButton(true)
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
-                        public void call() {
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.cancel();
+                            Intent it = new Intent(ListagemTipoLancheActivity.this, TipoLancheActivity.class);
+                            it.putExtra("tipo_lanche", u);
+                            startActivity(it);
+                            finish();
                         }
-                    });
+                    })
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.cancel();
 
-                }
-            });
-
-            alerta = builder.create();
-            alerta.show();
+                            excluirTipoLanche(new CallBack() {
+                                @Override
+                                public void call() {
+                                }
+                            });;
+                        }
+                    })
+                    .show();
         }
 
         @Override

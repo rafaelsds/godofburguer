@@ -5,7 +5,7 @@ public class TipoLanche {
     public static final String ID = "nr_sequencia";
     public static final String DESCRICAO = "descricao";
 
-    public void insumos(){
+    public void tipoLanche(){
     }
 
     public static String createTable(){

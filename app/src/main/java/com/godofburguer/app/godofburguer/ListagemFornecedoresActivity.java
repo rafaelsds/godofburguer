@@ -253,29 +253,31 @@ public class ListagemFornecedoresActivity extends AppCompatActivity implements S
 
 
         public void alerta(final Fornecedores u){
-            AlertDialog.Builder builder = new AlertDialog.Builder(ListagemFornecedoresActivity.this);
-
-            builder.setTitle("Cadastro de Fornecedores");
-            builder.setMessage("Escolha uma opção:");
-
-            builder.setPositiveButton("Editar", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface arg0, int arg1) {
-                    Intent it = new Intent(ListagemFornecedoresActivity.this, FornecedoresActivity.class);
-                    it.putExtra("fornecedor", u);
-                    startActivity(it);
-                    finish();
-                }
-            });
-
-            builder.setNegativeButton("Excluir", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface arg0, int arg1) {
-                    excluirFornecedor = u.getId();
-                    excluir();
-                }
-            });
-
-            alerta = builder.create();
-            alerta.show();
+            new SweetAlertDialog(ListagemFornecedoresActivity.this, SweetAlertDialog.NORMAL_TYPE)
+                    .setTitleText("Cadastro de Fornecedores")
+                    .setContentText("Escolha uma opção")
+                    .setCancelText("Editar")
+                    .setConfirmText("Excluir")
+                    .showCancelButton(true)
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.cancel();
+                            Intent it = new Intent(ListagemFornecedoresActivity.this, FornecedoresActivity.class);
+                            it.putExtra("fornecedor", u);
+                            startActivity(it);
+                            finish();
+                        }
+                    })
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.cancel();
+                            excluirFornecedor = u.getId();
+                            excluir();
+                        }
+                    })
+                    .show();
         }
 
         @Override

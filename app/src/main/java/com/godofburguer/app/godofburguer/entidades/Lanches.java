@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 public class Lanches implements Serializable{
 
-    private String nome,id;
+    private String nome, id, tipoLanche;
     private float valor;
 
 
@@ -14,10 +14,19 @@ public class Lanches implements Serializable{
         return nome ;
     }
 
-    public Lanches(String nome, String id, float valor) {
+    public Lanches(String nome, String id, float valor, String tipoLanche) {
         this.nome = nome;
         this.id = id;
         this.valor = valor;
+        this.tipoLanche = tipoLanche;
+    }
+
+    public String getTipoLanche() {
+        return tipoLanche;
+    }
+
+    public void setTipoLanche(String tipoLanche) {
+        this.tipoLanche = tipoLanche;
     }
 
     public String getNome() {

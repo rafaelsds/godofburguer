@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.godofburguer.app.godofburguer.db.CriaBanco;
+import com.godofburguer.app.godofburguer.db.Dml;
 import com.godofburguer.app.godofburguer.entidades.Indicador;
 
 import java.util.ArrayList;
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        Dml c = new Dml(this);
 
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         carregarCard();

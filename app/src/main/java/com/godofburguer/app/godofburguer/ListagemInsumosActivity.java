@@ -233,35 +233,35 @@ public class ListagemInsumosActivity extends AppCompatActivity implements SheetL
 
 
         private void alerta(final Insumos u){
-            AlertDialog.Builder builder = new AlertDialog.Builder(ListagemInsumosActivity.this);
-
-            builder.setTitle("Cadastro de Insumos");
-            builder.setMessage("Escolha uma opção:");
-
-            builder.setPositiveButton("Editar", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface arg0, int arg1) {
-                    Intent it = new Intent(ListagemInsumosActivity.this, InsumosActivity.class);
-                    it.putExtra("insumo", u);
-                    startActivity(it);
-                    finish();
-                }
-            });
-
-            builder.setNegativeButton("Excluir", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface arg0, int arg1) {
-                    insumoExcluir = u.getId();
-
-                    excluirInsumo(new CallBack() {
+            new SweetAlertDialog(ListagemInsumosActivity.this, SweetAlertDialog.NORMAL_TYPE)
+                    .setTitleText("Cadastro de Insumos")
+                    .setContentText("Escolha uma opção")
+                    .setCancelText("Editar")
+                    .setConfirmText("Excluir")
+                    .showCancelButton(true)
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
-                        public void call() {
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.cancel();
+                            Intent it = new Intent(ListagemInsumosActivity.this, InsumosActivity.class);
+                            it.putExtra("insumo", u);
+                            startActivity(it);
+                            finish();
                         }
-                    });
-
-                }
-            });
-
-            alerta = builder.create();
-            alerta.show();
+                    })
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.cancel();
+                            insumoExcluir = u.getId();
+                            excluirInsumo(new CallBack() {
+                                @Override
+                                public void call() {
+                                }
+                            });
+                        }
+                    })
+                    .show();
         }
 
         @Override

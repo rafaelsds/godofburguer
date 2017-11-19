@@ -33,9 +33,16 @@
                             android:text="@string/tipo_lanche" />
 
                         <Spinner
-                            android:layout_width="match_parent"
+                            xmlns:android="http://schemas.android.com/apk/res/android"
+                            android:id="@+id/spnTipoLanche"
+                            android:textAlignment="center"
+                            android:layout_marginLeft="30dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:spinnerMode="dropdown">
+                            android:textDirection="rtl"
+                            android:dropDownWidth="match_parent"
+                            android:spinnerMode="dropdown"
+                            style="@style/SpinnerStyle">
                         </Spinner>
 
                     </LinearLayout>
@@ -66,10 +73,15 @@
                         android:inputType="numberDecimal"/>
 
 
+                    <TextView
+                        android:layout_marginTop="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/insumos"/>
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.7dp"
-                        android:layout_marginTop="20dp"
                         android:layout_marginBottom="10dp"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
@@ -77,37 +89,47 @@
                     </View>
 
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/insumos"/>
-
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:orientation="horizontal">
 
-                        <AutoCompleteTextView
-                            android:id="@+id/atcNomeInsumoLanche"
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.2"/>
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.2">
 
-                        <Button
-                            android:layout_marginLeft="20dp"
-                            android:id="@+id/btnAddInsumoLanche"
+                            <AutoCompleteTextView
+                                android:id="@+id/atcNomeInsumoLanche"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/selecione_insumo" />
+                        </LinearLayout>
+
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="0.8"
-                            style="@style/ButtonMore"/>
+                            android:gravity="center">
+                            <Button
+                                android:id="@+id/btnAddInsumoLanche"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                style="@style/ButtonMore"/>
+                        </LinearLayout>
+
                     </LinearLayout>
+
+
                 </LinearLayout>
         </ScrollView>
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.7">
+            android:layout_weight="0.7"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp">
 
             <android.support.v7.widget.RecyclerView
                 xmlns:android="http://schemas.android.com/apk/res/android"

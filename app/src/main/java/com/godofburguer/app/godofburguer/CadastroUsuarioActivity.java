@@ -172,7 +172,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                     if (!response.isSuccessful()) {
                         Toast.makeText(CadastroUsuarioActivity.this, "Erro: "+response.code(), Toast.LENGTH_SHORT).show();
                     } else {
-                        callback.call();
+
                         Intent it = new Intent(CadastroUsuarioActivity.this, ListagemUsuariosActivity.class);
                         startActivity(it);
                         finish();
