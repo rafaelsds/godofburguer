@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.widget.Toast;
 
 import com.godofburguer.app.godofburguer.R;
+import com.godofburguer.app.godofburguer.controller.AvaliacaoController;
 import com.godofburguer.app.godofburguer.controller.ClientesController;
 import com.godofburguer.app.godofburguer.controller.FornecedoresController;
 import com.godofburguer.app.godofburguer.controller.InsumosController;
@@ -17,6 +18,7 @@ import com.godofburguer.app.godofburguer.controller.LanchesController;
 import com.godofburguer.app.godofburguer.controller.RootController;
 import com.godofburguer.app.godofburguer.controller.TipoLancheController;
 import com.godofburguer.app.godofburguer.controller.UsuariosController;
+import com.godofburguer.app.godofburguer.entidades.Avaliacao;
 import com.godofburguer.app.godofburguer.entidades.Clientes;
 import com.godofburguer.app.godofburguer.entidades.Fornecedores;
 import com.godofburguer.app.godofburguer.entidades.Insumos;
@@ -654,6 +656,87 @@ public class SincronizaBancoWs {
 
             @Override
             public void onFailure(Call<List<LancheInsumo>> call, Throwable t) {
+                progressDoalog.dismiss();
+                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    public static void atualizarAvaliacao(final CallBack callback, final Context context){
+        final String T_ID = com.godofburguer.app.godofburguer.db.tabelas.Avaliacao.ID;
+        final String T_SATISFACAO = com.godofburguer.app.godofburguer.db.tabelas.Avaliacao.SATISFACAO;
+        final String T_QUALIDADE = com.godofburguer.app.godofburguer.db.tabelas.Avaliacao.QUALIDADE;
+        final String T_AGILIDADE = com.godofburguer.app.godofburguer.db.tabelas.Avaliacao.AGILIDADE;
+        final String T_TABELA = com.godofburguer.app.godofburguer.db.tabelas.Avaliacao.TABELA;
+
+        final SweetAlertDialog progressDoalog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+        progressDoalog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        progressDoalog.setTitleText("Carregando...");
+        progressDoalog.setCancelable(false);
+        final Dml dml = new Dml(context);
+
+        final Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(RootController.URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+
+        AvaliacaoController controler = retrofit.create(AvaliacaoController.class);
+        Call<List<Avaliacao>> request= controler.list();
+
+        progressDoalog.show();
+
+        request.enqueue(new Callback<List<Avaliacao>>() {
+            @Override
+            public void onResponse(Call<List<Avaliacao>> call, Response<List<Avaliacao>> response) {
+                progressDoalog.dismiss();
+                if (!response.isSuccessful()) {
+                    Toast.makeText(context, response.code(), Toast.LENGTH_SHORT).show();
+                } else {
+                    //Limpar o SQLITE para incluir os registros obtidos via ws
+                    dml.delete(T_TABELA,null);
+
+                    //Intância uma nova lista que recebe os dados do response[WS]
+                    List<Avaliacao> objeto = response.body();
+
+                    for(Avaliacao r : objeto){
+                        //Inclui no banco
+                        ContentValues valores;
+                        valores = new ContentValues();
+                        valores.put(T_ID, r.getId());
+                        valores.put(T_SATISFACAO, r.getSatisfacao());
+                        valores.put(T_QUALIDADE, r.getQualidade());
+                        valores.put(T_AGILIDADE, r.getAgilidade());
+                        dml.insert(T_TABELA,valores);
+                    }
+
+                    //Faz o select de todos os dados passando por parametros, a tabela, os campos e a ordem
+                    String[] campos =  {T_ID, T_SATISFACAO,T_QUALIDADE, T_AGILIDADE};
+                    Cursor cursor = dml.getAll(T_TABELA, campos, T_ID+" ASC");
+
+                    ArrayList<Avaliacao> listReturn = new ArrayList<>();
+
+                    if(cursor != null) {
+                        if (cursor.moveToFirst()){
+                            while (!cursor.isAfterLast()) {
+                                listReturn.add(new Avaliacao(
+                                        cursor.getInt(cursor.getColumnIndexOrThrow(T_ID)),
+                                        cursor.getInt(cursor.getColumnIndexOrThrow(T_AGILIDADE)),
+                                        cursor.getInt(cursor.getColumnIndexOrThrow(T_SATISFACAO)),
+                                        cursor.getInt(cursor.getColumnIndexOrThrow(T_QUALIDADE))));
+                                cursor.moveToNext();
+                            }
+                        }
+                    }
+
+                    progressDoalog.dismiss();
+                    callback.call(listReturn);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Avaliacao>> call, Throwable t) {
                 progressDoalog.dismiss();
                 Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
             }

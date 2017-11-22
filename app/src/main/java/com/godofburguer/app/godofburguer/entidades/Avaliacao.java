@@ -2,10 +2,25 @@ package com.godofburguer.app.godofburguer.entidades;
 
 public class Avaliacao {
 
-    private Integer agilidade, satisfacao, qualidade;
+    private Integer id, agilidade, satisfacao, qualidade;
     private String titulo, descricao;
 
     public Avaliacao(){
+    }
+
+    public Avaliacao(Integer id, Integer agilidade, Integer satisfacao, Integer qualidade) {
+        this.id = id;
+        this.agilidade = agilidade;
+        this.satisfacao = satisfacao;
+        this.qualidade = qualidade;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getSatisfacao() {
