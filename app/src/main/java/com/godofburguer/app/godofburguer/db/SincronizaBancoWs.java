@@ -663,13 +663,7 @@ public class SincronizaBancoWs {
     }
 
 
-    public static void atualizarAvaliacao(final CallBack callback, final Context context){
-        final String T_ID = com.godofburguer.app.godofburguer.db.tabelas.Avaliacao.ID;
-        final String T_SATISFACAO = com.godofburguer.app.godofburguer.db.tabelas.Avaliacao.SATISFACAO;
-        final String T_QUALIDADE = com.godofburguer.app.godofburguer.db.tabelas.Avaliacao.QUALIDADE;
-        final String T_AGILIDADE = com.godofburguer.app.godofburguer.db.tabelas.Avaliacao.AGILIDADE;
-        final String T_TABELA = com.godofburguer.app.godofburguer.db.tabelas.Avaliacao.TABELA;
-
+    public static void atualizarAvaliacao(final CallBack2 callback, final Context context){
         final SweetAlertDialog progressDoalog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
         progressDoalog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         progressDoalog.setTitleText("Carregando...");
@@ -694,44 +688,30 @@ public class SincronizaBancoWs {
                 if (!response.isSuccessful()) {
                     Toast.makeText(context, response.code(), Toast.LENGTH_SHORT).show();
                 } else {
-                    //Limpar o SQLITE para incluir os registros obtidos via ws
-                    dml.delete(T_TABELA,null);
 
                     //Intância uma nova lista que recebe os dados do response[WS]
                     List<Avaliacao> objeto = response.body();
 
+                    Integer satisfacao =0, qualidade=0, agilidade=0;
+
                     for(Avaliacao r : objeto){
-                        //Inclui no banco
-                        ContentValues valores;
-                        valores = new ContentValues();
-                        valores.put(T_ID, r.getId());
-                        valores.put(T_SATISFACAO, r.getSatisfacao());
-                        valores.put(T_QUALIDADE, r.getQualidade());
-                        valores.put(T_AGILIDADE, r.getAgilidade());
-                        dml.insert(T_TABELA,valores);
+                        satisfacao = satisfacao+r.getSatisfacao();
+                        qualidade = qualidade+r.getQualidade();
+                        agilidade = agilidade+r.getAgilidade();
                     }
 
-                    //Faz o select de todos os dados passando por parametros, a tabela, os campos e a ordem
-                    String[] campos =  {T_ID, T_SATISFACAO,T_QUALIDADE, T_AGILIDADE};
-                    Cursor cursor = dml.getAll(T_TABELA, campos, T_ID+" ASC");
 
-                    ArrayList<Avaliacao> listReturn = new ArrayList<>();
+                    satisfacao = Math.round(satisfacao / objeto.size());
+                    qualidade = Math.round(qualidade / objeto.size());
+                    agilidade = Math.round(agilidade / objeto.size());
 
-                    if(cursor != null) {
-                        if (cursor.moveToFirst()){
-                            while (!cursor.isAfterLast()) {
-                                listReturn.add(new Avaliacao(
-                                        cursor.getInt(cursor.getColumnIndexOrThrow(T_ID)),
-                                        cursor.getInt(cursor.getColumnIndexOrThrow(T_AGILIDADE)),
-                                        cursor.getInt(cursor.getColumnIndexOrThrow(T_SATISFACAO)),
-                                        cursor.getInt(cursor.getColumnIndexOrThrow(T_QUALIDADE))));
-                                cursor.moveToNext();
-                            }
-                        }
-                    }
+                    HashMap<String, Integer>hash = new HashMap<>();
+                    hash.put("satisfacao",satisfacao);
+                    hash.put("qualidade",qualidade);
+                    hash.put("agilidade",agilidade);
 
                     progressDoalog.dismiss();
-                    callback.call(listReturn);
+                    callback.call(hash);
                 }
             }
 
@@ -748,5 +728,9 @@ public class SincronizaBancoWs {
         void call(T callList);
     }
 
+
+    public interface CallBack2{
+        void call(HashMap<String, Integer> callList);
+    }
 
 }

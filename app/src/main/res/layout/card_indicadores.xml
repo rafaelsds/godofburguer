@@ -18,7 +18,7 @@
         <android.support.v7.widget.CardView
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
-
+            android:id="@+id/cardSatisfacao"
             card_view:cardElevation="10dp"
             card_view:cardCornerRadius="10dp"
             card_view:cardPreventCornerOverlap="false"
@@ -30,7 +30,8 @@
                 android:layout_margin="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -40,6 +41,7 @@
                     android:textSize="15dp"/>
 
                 <TextView
+                    android:id="@+id/titulo_card"
                     android:gravity="center"
                     android:layout_margin="10dp"
                     android:layout_width="match_parent"
@@ -49,6 +51,7 @@
                     android:textSize="25dp"/>
 
                 <TextView
+                    android:id="@+id/descricao_card"
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -64,199 +67,51 @@
                     android:orientation="horizontal">
 
                     <ImageButton
+                        android:id="@+id/btn1"
                         android:layout_margin="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/icon_star"/>
+                        android:background="@drawable/icon_star"
+                        android:tag="1"
+                        android:onClick="teste"
+                        />
 
                     <ImageButton
+                        android:id="@+id/btn2"
                         android:layout_margin="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/icon_star" />
+                        android:background="@drawable/icon_star"
+                        android:tag="2"/>
 
                     <ImageButton
+                        android:id="@+id/btn3"
                         android:layout_margin="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/icon_star"/>
+                        android:background="@drawable/icon_star"
+                        android:tag="3"/>
 
                     <ImageButton
+                        android:id="@+id/btn4"
                         android:layout_margin="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/icon_star"/>
+                        android:background="@drawable/icon_star"
+                        android:tag="4"/>
 
                     <ImageButton
+                        android:id="@+id/btn5"
                         android:layout_margin="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/icon_star"/>
+                        android:background="@drawable/icon_star"
+                        android:tag="5"/>
 
                 </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
-        <android.support.v7.widget.CardView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            card_view:cardElevation="10dp"
-            card_view:cardCornerRadius="10dp"
-            card_view:cardPreventCornerOverlap="false"
-            card_view:cardUseCompatPadding="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:layout_margin="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/indicadores"
-                    android:textColor="@color/black"
-                    android:textSize="15dp"/>
-
-                <TextView
-                    android:gravity="center"
-                    android:layout_margin="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/qualidade"
-                    android:textColor="@color/black"
-                    android:textSize="25dp"/>
-
-                <TextView
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/qualidade_lanche"
-                    android:textColor="@color/black"
-                    android:textSize="18dp"/>
-
-                <LinearLayout
-                    android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <ImageButton
-                        android:layout_margin="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/icon_star"/>
-
-                    <ImageButton
-                        android:layout_margin="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/icon_star"/>
-
-                    <ImageButton
-                        android:layout_margin="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/icon_star"/>
-
-                    <ImageButton
-                        android:layout_margin="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/icon_star"/>
-
-                    <ImageButton
-                        android:layout_margin="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/icon_star"/>
-
-                </LinearLayout>
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            card_view:cardElevation="10dp"
-            card_view:cardCornerRadius="10dp"
-            card_view:cardPreventCornerOverlap="false"
-            card_view:cardUseCompatPadding="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_margin="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/indicadores"
-                        android:textColor="@color/black"
-                        android:textSize="15dp"/>
-
-                    <TextView
-                        android:gravity="center"
-                        android:layout_margin="10dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/agilidade"
-                        android:textColor="@color/black"
-                        android:textSize="25dp"/>
-
-                    <TextView
-                        android:gravity="center"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/tempo_entrega"
-                        android:textColor="@color/black"
-                        android:textSize="18dp"/>
-
-                    <LinearLayout
-                        android:layout_marginTop="10dp"
-                        android:gravity="center"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <ImageButton
-                            android:layout_margin="10dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/icon_star"/>
-
-                        <ImageButton
-                            android:layout_margin="10dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/icon_star"/>
-
-                        <ImageButton
-                            android:layout_margin="10dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/icon_star"/>
-
-                        <ImageButton
-                            android:layout_margin="10dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/icon_star"/>
-
-                        <ImageButton
-                            android:layout_margin="10dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/icon_star"/>
-
-                    </LinearLayout>
-                </LinearLayout>
-        </android.support.v7.widget.CardView>
     </LinearLayout>
 </ScrollView>

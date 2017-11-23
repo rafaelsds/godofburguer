@@ -14,14 +14,17 @@ import android.view.MenuItem;
 
 import com.godofburguer.app.godofburguer.db.CriaBanco;
 import com.godofburguer.app.godofburguer.db.Dml;
+import com.godofburguer.app.godofburguer.db.SincronizaBancoWs;
 import com.godofburguer.app.godofburguer.entidades.Indicador;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private RecyclerView recyclerView;
+    private AdapterCardIndicadores card;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,7 @@ public class MainActivity extends AppCompatActivity
         Dml c = new Dml(this);
 
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
+        card = new AdapterCardIndicadores();
         carregarCard();
 
     }
@@ -128,11 +132,20 @@ public class MainActivity extends AppCompatActivity
 
     public void carregarCard(){
 
-        ArrayList<Indicador> list = new ArrayList<Indicador>();
-        list.add(new Indicador(5,5,5));
+        SincronizaBancoWs.atualizarAvaliacao(new SincronizaBancoWs.CallBack2() {
+            @Override
+            public void call(HashMap<String, Integer> objeto) {
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new AdapterCardIndicadores(list));
+                card.itemSet(getResources().getString(R.string.satisfacao), getResources().getString(R.string.atendimento_cliente), objeto.get("satisfacao"));
+                card.itemSet(getResources().getString(R.string.qualidade), getResources().getString(R.string.qualidade_lanche), objeto.get("qualidade"));
+                card.itemSet(getResources().getString(R.string.agilidade), getResources().getString(R.string.tempo_entrega), objeto.get("agilidade"));
+
+                recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                recyclerView.setAdapter(card);
+
+            }
+        },MainActivity.this);
+
     }
 
 }
